@@ -1,4 +1,4 @@
 #!/usr/bin/sh
 
-mariadb symfony -uroot -psuperAdmin < /root/init.sql
+mariadb video_games -uroot -psuperAdmin < /root/init.sql
 echo "Restauration terminée"
