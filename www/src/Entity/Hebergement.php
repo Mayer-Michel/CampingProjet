@@ -20,8 +20,6 @@ class Hebergement
     #[ORM\ManyToOne(inversedBy: 'hebergement')]
     private ?Type $typeId = null;
 
-    #[ORM\ManyToOne(inversedBy: 'hebergement')]
-    private ?Tarif $tarifId = null;
 
     /**
      * @var Collection<int, Equipement>
@@ -48,16 +46,17 @@ class Hebergement
     private ?string $description = null;
 
     /**
-     * @var Collection<int, Tarif>
+     * @var Collection<int, Rental>
      */
-    #[ORM\OneToMany(targetEntity: Tarif::class, mappedBy: 'hebergementId')]
-    private Collection $tarif;
+    #[ORM\OneToMany(targetEntity: Rental::class, mappedBy: 'hebergement')]
+    private Collection $rentals;
+
 
     public function __construct()
     {
         $this->equipementID = new ArrayCollection();
         $this->imageId = new ArrayCollection();
-        $this->tarif = new ArrayCollection();
+        $this->rentals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,18 +72,6 @@ class Hebergement
     public function setTypeId(?Type $typeId): static
     {
         $this->typeId = $typeId;
-
-        return $this;
-    }
-
-    public function getTarifId(): ?Tarif
-    {
-        return $this->tarifId;
-    }
-
-    public function setTarifId(?Tarif $tarifId): static
-    {
-        $this->tarifId = $tarifId;
 
         return $this;
     }
@@ -192,29 +179,29 @@ class Hebergement
     }
 
     /**
-     * @return Collection<int, Tarif>
+     * @return Collection<int, Rental>
      */
-    public function getTarif(): Collection
+    public function getRentals(): Collection
     {
-        return $this->tarif;
+        return $this->rentals;
     }
 
-    public function addTarif(Tarif $tarif): static
+    public function addRental(Rental $rental): static
     {
-        if (!$this->tarif->contains($tarif)) {
-            $this->tarif->add($tarif);
-            $tarif->setHebergementId($this);
+        if (!$this->rentals->contains($rental)) {
+            $this->rentals->add($rental);
+            $rental->setHebergement($this);
         }
 
         return $this;
     }
 
-    public function removeTarif(Tarif $tarif): static
+    public function removeRental(Rental $rental): static
     {
-        if ($this->tarif->removeElement($tarif)) {
+        if ($this->rentals->removeElement($rental)) {
             // set the owning side to null (unless already changed)
-            if ($tarif->getHebergementId() === $this) {
-                $tarif->setHebergementId(null);
+            if ($rental->getHebergement() === $this) {
+                $rental->setHebergement(null);
             }
         }
 

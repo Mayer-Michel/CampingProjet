@@ -29,6 +29,9 @@ class Rental
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateEnd = null;
 
+    #[ORM\ManyToOne(inversedBy: 'rentals')]
+    private ?Hebergement $hebergement = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class Rental
     public function setDateEnd(\DateTimeInterface $dateEnd): static
     {
         $this->dateEnd = $dateEnd;
+
+        return $this;
+    }
+
+    public function getHebergement(): ?Hebergement
+    {
+        return $this->hebergement;
+    }
+
+    public function setHebergement(?Hebergement $hebergement): static
+    {
+        $this->hebergement = $hebergement;
 
         return $this;
     }
