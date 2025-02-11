@@ -1,0 +1,43 @@
+{# On recupère notre base #}
+{% extends "base.html.twig" %}
+{# on peut redefinir le titre de l'onglet #}
+{% block title %}
+	{{title|default('Nos hébergement')}}
+
+{% endblock %}
+{% block body %}
+	<div class="mb-4">
+    <form method="GET">
+        <div class="row">
+            <!-- Sélection de la date de début -->
+            <div class="col-md-4">
+                <label for="dateStart" class="form-label">Date d'arrivée :</label>
+                <input type="date" id="dateStart" name="dateStart" class="form-control">
+            </div>
+
+            <!-- Sélection de la date de fin -->
+            <div class="col-md-4">
+                <label for="dateEnd" class="form-label">Date de départ :</label>
+                <input type="date" id="dateEnd" name="dateEnd" class="form-control">
+            </div>
+
+            <!-- Sélection du type d'hébergement -->
+            <div class="col-md-4">
+                <label for="type" class="form-label">Type d'hébergement :</label>
+                <select id="type" name="type" class="form-control">
+                    <option value="">Tous</option>
+                    {% for type in types %}
+                        <option value="{{ type.id }}">{{ type.type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Bouton de validation -->
+        <div class="mt-3 text-center">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
