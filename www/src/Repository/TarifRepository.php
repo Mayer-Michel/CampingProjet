@@ -40,4 +40,18 @@ class TarifRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    // public function getTarif(Hebergement $hebergement, DateTimeInterface $date): ?float
+    // {
+    //     // Vérifier la fermeture hivernale
+    //     $mois = (int) $date->format('m');
+    //     if ($mois >= 10 || $mois <= 3) {
+    //         return null; // Indique que l'hébergement est fermé
+    //     }
+
+    //     // Récupérer le tarif correspondant à la période
+    //     $tarif = $this->tarifRepository->findOneByDateAndHebergement($date, $hebergement);
+
+    //     return $tarif ? $tarif->getPrix() : null;
+    // }
 }

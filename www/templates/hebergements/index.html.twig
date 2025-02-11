@@ -1,0 +1,22 @@
+{# On recupère notre base #}
+{% extends "base.html.twig" %}
+{# on peut redefinir le titre de l'onglet #}
+{% block title %}
+	{{title|default('Nos jeux')}}
+
+{% endblock %}
+{% block body %}
+	<div class="container mt-5">
+		<header class="mb-4">
+			<h1 class="text-center mb-5 display-4">{{title|default('Nos jeux')}}</h1>
+
+		</header>
+
+		<div class="game-grid">
+			{% for hebergement in hebergements %}
+				{% include "components/_hebergement_card.html.twig" with {'hebergement': hebergement} %}
+			{% endfor %}
+		</div>
+	</div>
+
+{% endblock %}

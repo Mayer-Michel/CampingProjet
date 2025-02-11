@@ -16,28 +16,30 @@ class HebergementRepository extends ServiceEntityRepository
         parent::__construct($registry, Hebergement::class);
     }
 
-    //    /**
-    //     * @return Hebergement[] Returns an array of Hebergement objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('h')
-    //            ->andWhere('h.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('h.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+    * Finds available accommodations between two dates.
+    */
+    public function findAvailableHebergements(\DateTimeInterface $dateStart, \DateTimeInterface $dateEnd)
+    {
+        $entityManager = $this->getEntityManager();
 
-    //    public function findOneBySomeField($value): ?Hebergement
-    //    {
-    //        return $this->createQueryBuilder('h')
-    //            ->andWhere('h.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $qb = $entityManager->createQueryBuilder();
+
+        $query = $qb->select(
+            'h.id', 
+            'h.description', 
+            'h.capacity', 
+            'h.surface', 
+            'r.dateStart', 
+            'r.dateEnd'
+            )
+            ->from(Hebergement::class, 'h')
+            ->leftJoin('h.rentals', 'r')
+            ->where('r.dateEnd < :dateStart OR r.dateStart > :dateEnd')  // No overlap between rental dates and selected dates
+            ->setParameter('dateStart', $dateStart)
+            ->setParameter('dateEnd', $dateEnd)
+            ->getQuery()->getResult();
+        
+        return $query;
+    }
 }

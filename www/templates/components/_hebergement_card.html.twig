@@ -1,1 +1,18 @@
-{# TODO: #}
+{# TODO:
+<div class="game-card">
+	<div class="game-info">
+		<h2 class="game-title">{{hebergement.id}}</h2>
+		<div class="game-info-container">
+			<p class="game-price">{{(hebergement.capacity)|number_format}}</p>
+		</div>
+	</div>
+
+	
+</div> #}
+<div class="game-card">
+<h1>{{ hebergement.id }}</h1>
+	<p>{{ hebergement.description }}</p>
+	<div class="game-info-container">
+		<p>{{ hebergement.capacity }}</p>
+	</div>
+</div>
