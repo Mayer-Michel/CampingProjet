@@ -30,6 +30,7 @@ class HebergementRepository extends ServiceEntityRepository
             'h.description', 
             'h.capacity', 
             'h.surface', 
+            'h.imagePath',
             'r.dateStart', 
             'r.dateEnd'
             )
@@ -60,15 +61,17 @@ class HebergementRepository extends ServiceEntityRepository
             'h.surface',
             'h.description',
             'h.capacity',
-            't.type',
+            'h.imagePath',
+            't.label',
     
         ])->from(Hebergement::class, 'h')
-        ->leftJoin('h.typeId', 't')
+        ->leftJoin('h.type', 't')
         ->where('h.id = :id')
         ->setParameter('id', $id)
-        ->getQuery();
+        ->getQuery()->getOneOrNullResult();
+        // dd($query);
 
-        return $query->getOneOrNullResult();
+        return $query;
     }
 
     /**
@@ -84,9 +87,9 @@ class HebergementRepository extends ServiceEntityRepository
 
         $query = $qb->select([
             'e.id',
-            'e.equipement'
+            'e.label'
         ])->from(Hebergement::class, 'h')
-        ->leftJoin('h.equipementID', 'e')
+        ->leftJoin('h.equipement', 'e')
         ->where('h.id = :id')
         ->setParameter('id', $id)
         ->getQuery();
@@ -94,22 +97,21 @@ class HebergementRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    /**
-     * méthode qui récupère les images lié à l'hebergement
-     * @param int $id
-     * @return array
-    */
-    public function imageByHeberg(int $id): array
+    public function getHebergementTarif(int $id): array
     {
+        // on appel l'entity manager
         $entityManager = $this->getEntityManager();
-
+ 
+        //METHODE AVEC DQL
         $qb = $entityManager->createQueryBuilder();
-
+        //on crée la query
         $query = $qb->select([
-            'i.id',
-            'i.imagePath'
+            't.id',
+            't.prix',
+            's.label'
         ])->from(Hebergement::class, 'h')
-        ->leftJoin('h.imageId', 'i')
+        ->leftJoin('h.tarif', 't')
+        ->leftJoin('t.saison', 's')
         ->where('h.id = :id')
         ->setParameter('id', $id)
         ->getQuery()->getResult();
@@ -117,5 +119,4 @@ class HebergementRepository extends ServiceEntityRepository
         return $query;
     }
 
-        
 }

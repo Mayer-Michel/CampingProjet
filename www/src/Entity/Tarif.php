@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TarifRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TarifRepository::class)]
@@ -15,41 +13,19 @@ class Tarif
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Saison $saisonId = null;
-
     #[ORM\Column]
     private ?float $prix = null;
 
-    /**
-     * @var Collection<int, Hebergement>
-     */
-    #[ORM\OneToMany(targetEntity: Hebergement::class, mappedBy: 'tarifId')]
-    private Collection $hebergement;
+    #[ORM\ManyToOne(inversedBy: 'tarifs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Saison $saison = null;
 
     #[ORM\ManyToOne(inversedBy: 'tarif')]
-    private ?Hebergement $hebergementId = null;
-
-    public function __construct()
-    {
-        $this->hebergement = new ArrayCollection();
-    }
+    private ?Hebergement $hebergement = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getSaisonId(): ?Saison
-    {
-        return $this->saisonId;
-    }
-
-    public function setSaisonId(?Saison $saisonId): static
-    {
-        $this->saisonId = $saisonId;
-
-        return $this;
     }
 
     public function getPrix(): ?float
@@ -64,44 +40,26 @@ class Tarif
         return $this;
     }
 
-    /**
-     * @return Collection<int, Hebergement>
-     */
-    public function getHebergement(): Collection
+    public function getSaison(): ?Saison
+    {
+        return $this->saison;
+    }
+
+    public function setSaison(?Saison $saison): static
+    {
+        $this->saison = $saison;
+
+        return $this;
+    }
+
+    public function getHebergement(): ?Hebergement
     {
         return $this->hebergement;
     }
 
-    public function addHebergement(Hebergement $hebergement): static
+    public function setHebergement(?Hebergement $hebergement): static
     {
-        if (!$this->hebergement->contains($hebergement)) {
-            $this->hebergement->add($hebergement);
-            $hebergement->setTarifId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeHebergement(Hebergement $hebergement): static
-    {
-        if ($this->hebergement->removeElement($hebergement)) {
-            // set the owning side to null (unless already changed)
-            if ($hebergement->getTarifId() === $this) {
-                $hebergement->setTarifId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getHebergementId(): ?Hebergement
-    {
-        return $this->hebergementId;
-    }
-
-    public function setHebergementId(?Hebergement $hebergementId): static
-    {
-        $this->hebergementId = $hebergementId;
+        $this->hebergement = $hebergement;
 
         return $this;
     }

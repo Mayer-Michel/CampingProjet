@@ -3,23 +3,31 @@
 <div class="game-detail-card">
 
 	<div class="game-detail-content">
-			<h1 class="game-title">{{hebergement.id}}</h1>
+
+
+		<h1 class="game-title">{{hebergement.id}}</h1>
 		{# affichage des consoles #}
 		<div class="game-consoles mb-3">
 			{% for equipement in equipements %}
-				<span class="console-badge">{{equipement.equipement}}</span>
+				<span class="console-badge">{{equipement.label}}</span>
 			{% endfor %}
 		</div>
-			<div class="game-info-detail mb-4">
-				<div class="info-item">
-					<span class="info-label">surface:</span>
-					<span class="info-value">{{hebergement.surface}}</span>
-				</div>
-			</div>
 
-			<div class="game-synopsis mb-4">
-				<h2>Synopsis</h2>
-				<p>{{hebergement.description}}</p>
+		<div class="game-info-detail mb-4">
+			<div class="info-item">
+				<span class="info-label">surface:</span>
+				<span class="info-value">{{hebergement.surface}}</span>
+				{% for prix in prices %}
+				<span class="info-value">{{prix.label}}</span>
+				<span class="info-value">{{prix.prix}}</span>
+				{% endfor %}
 			</div>
 		</div>
+
+		<div class="game-synopsis mb-4">
+			<h2>Synopsis</h2>
+			<p>{{hebergement.description}}</p>
+		</div>
+
+	</div>
 </div>

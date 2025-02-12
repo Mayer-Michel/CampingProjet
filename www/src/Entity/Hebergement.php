@@ -2,12 +2,11 @@
 
 namespace App\Entity;
 
-use App\Entity\Type;
+use App\Repository\HebergementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\HebergementRepository;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: HebergementRepository::class)]
 class Hebergement
@@ -16,22 +15,6 @@ class Hebergement
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\ManyToOne(inversedBy: 'hebergement')]
-    private ?Type $typeId = null;
-
-
-    /**
-     * @var Collection<int, Equipement>
-     */
-    #[ORM\ManyToMany(targetEntity: Equipement::class, inversedBy: 'hebergement')]
-    private Collection $equipementID;
-
-    /**
-     * @var Collection<int, Image>
-     */
-    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'hebergement')]
-    private Collection $imageId;
 
     #[ORM\Column]
     private ?int $capacity = null;
@@ -45,89 +28,40 @@ class Hebergement
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $imagePath = null;
+
+    /**
+     * @var Collection<int, Tarif>
+     */
+    #[ORM\OneToMany(targetEntity: Tarif::class, mappedBy: 'hebergement')]
+    private Collection $tarif;
+
+    #[ORM\ManyToOne(inversedBy: 'hebergements')]
+    private ?Type $type = null;
+
+    /**
+     * @var Collection<int, Equipement>
+     */
+    #[ORM\ManyToMany(targetEntity: Equipement::class, inversedBy: 'hebergements')]
+    private Collection $equipement;
+
     /**
      * @var Collection<int, Rental>
      */
     #[ORM\OneToMany(targetEntity: Rental::class, mappedBy: 'hebergement')]
     private Collection $rentals;
 
-
     public function __construct()
     {
-        $this->equipementID = new ArrayCollection();
-        $this->imageId = new ArrayCollection();
+        $this->tarif = new ArrayCollection();
+        $this->equipement = new ArrayCollection();
         $this->rentals = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTypeId(): ?Type
-    {
-        return $this->typeId;
-    }
-
-    public function setTypeId(?Type $typeId): static
-    {
-        $this->typeId = $typeId;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Equipement>
-     */
-    public function getEquipementID(): Collection
-    {
-        return $this->equipementID;
-    }
-
-    public function addEquipementID(Equipement $equipementID): static
-    {
-        if (!$this->equipementID->contains($equipementID)) {
-            $this->equipementID->add($equipementID);
-        }
-
-        return $this;
-    }
-
-    public function removeEquipementID(Equipement $equipementID): static
-    {
-        $this->equipementID->removeElement($equipementID);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Image>
-     */
-    public function getImageId(): Collection
-    {
-        return $this->imageId;
-    }
-
-    public function addImageId(Image $imageId): static
-    {
-        if (!$this->imageId->contains($imageId)) {
-            $this->imageId->add($imageId);
-            $imageId->setHebergement($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImageId(Image $imageId): static
-    {
-        if ($this->imageId->removeElement($imageId)) {
-            // set the owning side to null (unless already changed)
-            if ($imageId->getHebergement() === $this) {
-                $imageId->setHebergement(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getCapacity(): ?int
@@ -174,6 +108,84 @@ class Hebergement
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function setImagePath(string $imagePath): static
+    {
+        $this->imagePath = $imagePath;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tarif>
+     */
+    public function getTarif(): Collection
+    {
+        return $this->tarif;
+    }
+
+    public function addTarif(Tarif $tarif): static
+    {
+        if (!$this->tarif->contains($tarif)) {
+            $this->tarif->add($tarif);
+            $tarif->setHebergement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTarif(Tarif $tarif): static
+    {
+        if ($this->tarif->removeElement($tarif)) {
+            // set the owning side to null (unless already changed)
+            if ($tarif->getHebergement() === $this) {
+                $tarif->setHebergement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->type;
+    }
+
+    public function setType(?Type $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Equipement>
+     */
+    public function getEquipement(): Collection
+    {
+        return $this->equipement;
+    }
+
+    public function addEquipement(Equipement $equipement): static
+    {
+        if (!$this->equipement->contains($equipement)) {
+            $this->equipement->add($equipement);
+        }
+
+        return $this;
+    }
+
+    public function removeEquipement(Equipement $equipement): static
+    {
+        $this->equipement->removeElement($equipement);
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Hebergement;
 use App\Repository\HebergementRepository;
+use App\Repository\TarifRepository;
 use App\Repository\TypeRepository;
 use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,21 +59,25 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/heberegments/detail/{id}', name: 'app_detail')]
-    public function hebergementDetail(HebergementRepository $repo, int $id)
+    #[Route('/hebergements/detail/{id}', name: 'app_detail')]
+    public function hebergementDetail(HebergementRepository $repo, TarifRepository $tarif, int $id)
     {
         // On recupére l'hebergement avec les données
         $hebergements = $repo->hebergementDetail($id);
 
         $equipements = $repo->equipementByHeberg($id);
 
-        $images = $repo->imageByHeberg($id);
+        $saisons = $tarif->getTarifBySaison($id);
+
+        $prices = $repo->getHebergementTarif($id);
     
 
         return $this->render('hebergements/detail.html.twig', [
             'hebergement' => $hebergements,
+            'prices' => $prices,
             'equipements' => $equipements,
-            'images' => $images
+            'saison' => $saisons
         ]);
     }
+
 }

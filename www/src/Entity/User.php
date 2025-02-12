@@ -36,15 +36,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Rental>
      */
-    #[ORM\OneToMany(targetEntity: Rental::class, mappedBy: 'userId')]
-    private Collection $rental;
+    #[ORM\OneToMany(targetEntity: Rental::class, mappedBy: 'user')]
+    private Collection $rentals;
 
     #[ORM\Column(length: 50)]
     private ?string $username = null;
 
     public function __construct()
     {
-        $this->rental = new ArrayCollection();
+        $this->rentals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,16 +125,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Rental>
      */
-    public function getRental(): Collection
+    public function getRentals(): Collection
     {
-        return $this->rental;
+        return $this->rentals;
     }
 
     public function addRental(Rental $rental): static
     {
-        if (!$this->rental->contains($rental)) {
-            $this->rental->add($rental);
-            $rental->setUserId($this);
+        if (!$this->rentals->contains($rental)) {
+            $this->rentals->add($rental);
+            $rental->setUser($this);
         }
 
         return $this;
@@ -142,10 +142,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeRental(Rental $rental): static
     {
-        if ($this->rental->removeElement($rental)) {
+        if ($this->rentals->removeElement($rental)) {
             // set the owning side to null (unless already changed)
-            if ($rental->getUserId() === $this) {
-                $rental->setUserId(null);
+            if ($rental->getUser() === $this) {
+                $rental->setUser(null);
             }
         }
 

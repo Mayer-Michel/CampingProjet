@@ -16,17 +16,17 @@ class Equipement
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $equipement = null;
+    private ?string $label = null;
 
     /**
      * @var Collection<int, Hebergement>
      */
-    #[ORM\ManyToMany(targetEntity: Hebergement::class, mappedBy: 'equipementID')]
-    private Collection $hebergement;
+    #[ORM\ManyToMany(targetEntity: Hebergement::class, mappedBy: 'equipement')]
+    private Collection $hebergements;
 
     public function __construct()
     {
-        $this->hebergement = new ArrayCollection();
+        $this->hebergements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -34,14 +34,14 @@ class Equipement
         return $this->id;
     }
 
-    public function getEquipement(): ?string
+    public function getLabel(): ?string
     {
-        return $this->equipement;
+        return $this->label;
     }
 
-    public function setEquipement(string $equipement): static
+    public function setLabel(string $label): static
     {
-        $this->equipement = $equipement;
+        $this->label = $label;
 
         return $this;
     }
@@ -49,16 +49,16 @@ class Equipement
     /**
      * @return Collection<int, Hebergement>
      */
-    public function getHebergement(): Collection
+    public function getHebergements(): Collection
     {
-        return $this->hebergement;
+        return $this->hebergements;
     }
 
     public function addHebergement(Hebergement $hebergement): static
     {
-        if (!$this->hebergement->contains($hebergement)) {
-            $this->hebergement->add($hebergement);
-            $hebergement->addEquipementID($this);
+        if (!$this->hebergements->contains($hebergement)) {
+            $this->hebergements->add($hebergement);
+            $hebergement->addEquipement($this);
         }
 
         return $this;
@@ -66,8 +66,8 @@ class Equipement
 
     public function removeHebergement(Hebergement $hebergement): static
     {
-        if ($this->hebergement->removeElement($hebergement)) {
-            $hebergement->removeEquipementID($this);
+        if ($this->hebergements->removeElement($hebergement)) {
+            $hebergement->removeEquipement($this);
         }
 
         return $this;

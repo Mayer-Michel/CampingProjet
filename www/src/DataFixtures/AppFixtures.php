@@ -30,7 +30,6 @@ class AppFixtures extends Fixture
         $this->loadTypes($manager);
         $this->loadEquipements($manager);
         $this->loadSaisons($manager);
-        $this->loadImages($manager);
         $this->loadHebergements($manager);
         $this->loadTarifs($manager);
         $this->loadRentals($manager);
@@ -90,7 +89,7 @@ class AppFixtures extends Fixture
         foreach($array_types as $key => $value){
             //on instancie une type
             $type = new Type();
-            $type->setType($value);
+            $type->setLabel($value);
             //on persiste les données
             $manager->persist($type);
             //on définit une référence pour pouvoir faire nos relations
@@ -138,7 +137,7 @@ class AppFixtures extends Fixture
         foreach($array_equipements as $key => $value){
             //on instancie une type
             $equipement = new Equipement();
-            $equipement->setEquipement($value);
+            $equipement->setLabel($value);
             //on persiste les données
             $manager->persist($equipement);
             //on définit une référence pour pouvoir faire nos relations
@@ -180,7 +179,7 @@ class AppFixtures extends Fixture
         // Insère chaque saison dans la base de données
         foreach ($array_saisons as $key => $value) {
             $saison = new Saison();
-            $saison->setSaison($value['saison']);
+            $saison->setLabel($value['saison']);
             $saison->setDateStart($value['date_start']);
             $saison->setDateEnd($value['date_end']);
             //on persiste les données
@@ -190,83 +189,6 @@ class AppFixtures extends Fixture
         }
     }
 
-    /**
-     * méthode pour générer les images
-     * @param ObjectManager $manager
-     * @return void
-     */
-    public function loadImages(ObjectManager $manager): void
-    {
-        // Crée une liste d'image avec le chemin (Path), le nom et la taille 
-        $array_images = [
-            [
-                'imagePath' => 'public/images/images-1.jpeg',
-                'imageName' => 'images-1.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-2.jpeg',
-                'imageName' => 'images-2.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-3.jpeg',
-                'imageName' => 'images-3.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-4.jpeg',
-                'imageName' => 'images-4.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-5.jpeg',
-                'imageName' => 'images-5.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-6.jpeg',
-                'imageName' => 'images-6.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-7.jpeg',
-                'imageName' => 'images-7.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-8.jpeg',
-                'imageName' => 'images-8.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-9.jpeg',
-                'imageName' => 'images-9.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-10.jpeg',
-                'imageName' => 'images-10.jpeg',
-                'imageSize' => '12989'
-            ],
-            [
-                'imagePath' => 'public/images/images-11.jpeg',
-                'imageName' => 'images-11.jpeg',
-                'imageSize' => '12989'
-            ],
-        ];
-         // Insère chaque saison dans la base de données
-         foreach ($array_images as $key => $value) {
-            $image = new Image();
-            $image->setImagePath($value['imagePath']);
-            $image->setImageName($value['imageName']);
-            $image->setImageSize($value['imageSize']);
-            //on persiste les données
-            $manager->persist($image);
-            //on définit une référence pour pouvoir faire nos relations
-            $this->addReference('image_'.$key + 1, $image);
-        }
-    }
 
     /**
     * méthode pour générer les hebergements
@@ -283,7 +205,7 @@ class AppFixtures extends Fixture
                'surface' => '40',
                'disponibilite' => true,
                'description' => 'Hébergement confortable pour 5 personnes.',
-               'image' => [1, 2], // Première image
+               'image' => 'image-1.jpeg', // Première image
                'equipement' => [13, 15, 7, 8, 4, 6, 10]
            ],
            [
@@ -292,7 +214,7 @@ class AppFixtures extends Fixture
                'surface' => '20',
                'disponibilite' => true,
                'description' => 'Petit studio pour 2 personnes.',
-               'image' => [3, 4], // Deuxième image
+               'image' => 'image-2.jpeg', // Deuxième image
                'equipement' => [3, 5, 7, 8]
            ],
            [
@@ -301,7 +223,7 @@ class AppFixtures extends Fixture
                'surface' => '60',
                'disponibilite' => false,
                'description' => 'Grande maison pour 6 personnes.',
-               'image' => [7, 10], // Troisième image
+               'image' => 'image-3.jpeg', // Troisième image
                'equipement' => [3, 5, 7, 8]
            ]
        ];
@@ -309,18 +231,15 @@ class AppFixtures extends Fixture
        // Insertion des hébergements dans la base
        foreach ($array_hebergements as $key => $value) {
            $hebergement = new Hebergement();
-           $hebergement->setTypeId($this ->getReference('type_'.$value['type'], Type::class));
+           $hebergement->setType($this ->getReference('type_'.$value['type'], Type::class));
            $hebergement->setCapacity($value['capacite']);
            $hebergement->setSurface($value['surface']);
            $hebergement->setDisponibilite($value['disponibilite']);
            $hebergement->setDescription($value['description']);
-           //on va devoir boucler sur $value['image'] pour faire les relations du one to many
-           foreach($value['image'] as $image){
-            $hebergement->addImageId($this->getReference('image_'.$image, Image::class));
-        }
+           $hebergement->setImagePath($value['image']);
            //on va devoir boucler sur $value['equipement'] pour faire les relations du many to many
            foreach($value['equipement'] as $equipement){
-            $hebergement->addEquipementID($this->getReference('equipement_'.$equipement, Equipement::class));
+            $hebergement->addEquipement($this->getReference('equipement_'.$equipement, Equipement::class));
         }
         //on persiste les données
         $manager->persist($hebergement);
@@ -361,7 +280,8 @@ class AppFixtures extends Fixture
         // Insère chaque tarif dans la base de données
         foreach ($array_tarifs as $key => $value) {
             $tarif = new Tarif();
-            $tarif->setSaisonId($this->getReference('saison_'.$value['saisonId'], Saison::class));
+            $tarif->setSaison($this->getReference('saison_'.$value['saisonId'], Saison::class));
+            $tarif->setHebergement($this->getReference('hebergement_'.$value['hebergementId'], Hebergement::class));
             $tarif->setPrix($value['prix']);
             $manager->persist($tarif);
             //on définit une référence pour pouvoir faire nos relations
@@ -405,10 +325,10 @@ class AppFixtures extends Fixture
          // Insertion des rentals dans la base
         foreach ($array_rentals as $key => $value) {
             $rental = new Rental();
-            $rental->setUserId($this ->getReference('user_'.$value['user'], User::class));
+            $rental->setUser($this ->getReference('user_'.$value['user'], User::class));
             $rental->setHebergement($this ->getReference('hebergement_'.$value['hebergement'], Hebergement::class));
-            $rental->setNbrAdults($value['nbrAdults']);
-            $rental->setNbrKids($value['nbrKids']);
+            $rental->setNbrAdult($value['nbrAdults']);
+            $rental->setNbrChildren($value['nbrKids']);
             $rental->setDateStart($value['dateStart']);
             $rental->setDateEnd($value['dateEnd']);
 

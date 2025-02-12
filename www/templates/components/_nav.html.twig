@@ -8,21 +8,8 @@
         {# Logo du site #}
         <div>
             <a href="{{ path('app_home') }}" class="navbar-brand">
-                <img src="/images/images-1.jpeg" alt="logo du site">
+                <img src="/images/logo.png" alt="logo du site">
             </a>
-        </div>
-
-        {# Filtre par date d'arrivée et de départ #}
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <form action="{{ path('by_date') }}" class="d-flex align-items-center">
-                <label for="date_start" class="me-2">Arrivée :</label>
-                <input type="date" id="date_start" name="date_start" class="form-control me-3" required>
-
-                <label for="date_end" class="me-2">Départ :</label>
-                <input type="date" id="date_end" name="date_end" class="form-control me-3" required>
-
-                <button type="submit" class="btn btn-primary">Rechercher</button>
-            </form>
         </div>
 
         {# Espace administrateur et utilisateur #}

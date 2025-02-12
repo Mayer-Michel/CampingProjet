@@ -14,20 +14,20 @@ class Rental
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'rental')]
-    private ?User $userId = null;
+    #[ORM\Column]
+    private ?int $nbrAdult = null;
 
     #[ORM\Column]
-    private ?int $nbrAdults = null;
-
-    #[ORM\Column]
-    private ?int $nbrKids = null;
+    private ?int $nbrChildren = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateStart = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateEnd = null;
+
+    #[ORM\ManyToOne(inversedBy: 'rentals')]
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'rentals')]
     private ?Hebergement $hebergement = null;
@@ -37,38 +37,26 @@ class Rental
         return $this->id;
     }
 
-    public function getUserId(): ?User
+    public function getNbrAdult(): ?int
     {
-        return $this->userId;
+        return $this->nbrAdult;
     }
 
-    public function setUserId(?User $userId): static
+    public function setNbrAdult(int $nbrAdult): static
     {
-        $this->userId = $userId;
+        $this->nbrAdult = $nbrAdult;
 
         return $this;
     }
 
-    public function getNbrAdults(): ?int
+    public function getNbrChildren(): ?int
     {
-        return $this->nbrAdults;
+        return $this->nbrChildren;
     }
 
-    public function setNbrAdults(int $nbrAdults): static
+    public function setNbrChildren(int $nbrChildren): static
     {
-        $this->nbrAdults = $nbrAdults;
-
-        return $this;
-    }
-
-    public function getNbrKids(): ?int
-    {
-        return $this->nbrKids;
-    }
-
-    public function setNbrKids(int $nbrKids): static
-    {
-        $this->nbrKids = $nbrKids;
+        $this->nbrChildren = $nbrChildren;
 
         return $this;
     }
@@ -93,6 +81,18 @@ class Rental
     public function setDateEnd(\DateTimeInterface $dateEnd): static
     {
         $this->dateEnd = $dateEnd;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

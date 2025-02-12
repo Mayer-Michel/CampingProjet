@@ -1,13 +1,13 @@
 @import "~bootstrap/scss/bootstrap";
 
 //on va déclarer nos variable de couleur
-$primary-bg: #1a1f36; 
+$primary-bg: #E5E6DF; 
 $text-light: #f0f0f0;
 $accent-color: #ff595a;
-$highlight-color: #ffd700;
+$highlight-color: #934703;
 $text-muted: rgba(240,240,240,0.6);
-$overlay-bg:rgba(26,31,54,0.7);
-$dashboard-color: #8d157b;
+$overlay-bg:#E5E6DF;
+$dashboard-color: #15526B;
 
 body{
   background-color: $primary-bg;

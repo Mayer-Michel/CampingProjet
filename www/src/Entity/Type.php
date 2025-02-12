@@ -16,17 +16,17 @@ class Type
     private ?int $id = null;
 
     #[ORM\Column(length: 40)]
-    private ?string $type = null;
+    private ?string $label = null;
 
     /**
      * @var Collection<int, Hebergement>
      */
-    #[ORM\OneToMany(targetEntity: Hebergement::class, mappedBy: 'typeId')]
-    private Collection $hebergement;
+    #[ORM\OneToMany(targetEntity: Hebergement::class, mappedBy: 'type')]
+    private Collection $hebergements;
 
     public function __construct()
     {
-        $this->hebergement = new ArrayCollection();
+        $this->hebergements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -34,14 +34,14 @@ class Type
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getLabel(): ?string
     {
-        return $this->type;
+        return $this->label;
     }
 
-    public function setType(string $type): static
+    public function setLabel(string $label): static
     {
-        $this->type = $type;
+        $this->label = $label;
 
         return $this;
     }
@@ -49,16 +49,16 @@ class Type
     /**
      * @return Collection<int, Hebergement>
      */
-    public function getHebergement(): Collection
+    public function getHebergements(): Collection
     {
-        return $this->hebergement;
+        return $this->hebergements;
     }
 
     public function addHebergement(Hebergement $hebergement): static
     {
-        if (!$this->hebergement->contains($hebergement)) {
-            $this->hebergement->add($hebergement);
-            $hebergement->setTypeId($this);
+        if (!$this->hebergements->contains($hebergement)) {
+            $this->hebergements->add($hebergement);
+            $hebergement->setType($this);
         }
 
         return $this;
@@ -66,10 +66,10 @@ class Type
 
     public function removeHebergement(Hebergement $hebergement): static
     {
-        if ($this->hebergement->removeElement($hebergement)) {
+        if ($this->hebergements->removeElement($hebergement)) {
             // set the owning side to null (unless already changed)
-            if ($hebergement->getTypeId() === $this) {
-                $hebergement->setTypeId(null);
+            if ($hebergement->getType() === $this) {
+                $hebergement->setType(null);
             }
         }
 
