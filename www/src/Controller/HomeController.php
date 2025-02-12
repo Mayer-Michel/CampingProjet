@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Hebergement;
 use App\Repository\HebergementRepository;
 use App\Repository\TypeRepository;
+use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,6 +55,24 @@ class HomeController extends AbstractController
 
         return $this->render('hebergements/index.html.twig', [
             'hebergements' => $hebergements
+        ]);
+    }
+
+    #[Route('/heberegments/detail/{id}', name: 'app_detail')]
+    public function hebergementDetail(HebergementRepository $repo, int $id)
+    {
+        // On recupére l'hebergement avec les données
+        $hebergements = $repo->hebergementDetail($id);
+
+        $equipements = $repo->equipementByHeberg($id);
+
+        $images = $repo->imageByHeberg($id);
+    
+
+        return $this->render('hebergements/detail.html.twig', [
+            'hebergement' => $hebergements,
+            'equipements' => $equipements,
+            'images' => $images
         ]);
     }
 }
