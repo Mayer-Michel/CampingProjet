@@ -1,11 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Saison{% endblock %}
+{% block title %}New saison
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Saison</h1>
+	<div class="game-form-container">
+		<h1>Create new saison</h1>
+		{{ include('saison/_form.html.twig') }}
+		<div class="action-buttons">
 
-    {{ include('saison/_form.html.twig') }}
-
-    <a href="{{ path('app_saison_index') }}">back to list</a>
+			<a href="{{ path('app_saison_index') }}">
+				<i class="fas fa-arrow-left"></i>
+				Retour à la liste
+			</a>
+		</div>
+	</div>
 {% endblock %}

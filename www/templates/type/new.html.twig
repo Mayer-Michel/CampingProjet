@@ -1,11 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Type{% endblock %}
+{% block title %}New Type
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Type</h1>
+	<div class="game-form-container">
+		<h1>Create new Type</h1>
+		{{ include('type/_form.html.twig') }}
+		<div class="action-buttons">
 
-    {{ include('type/_form.html.twig') }}
-
-    <a href="{{ path('app_type_index') }}">back to list</a>
+			<a href="{{ path('app_type_index') }}">
+				<i class="fas fa-arrow-left"></i>
+				Retour à la liste
+			</a>
+		</div>
+	</div>
 {% endblock %}

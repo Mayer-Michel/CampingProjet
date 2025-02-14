@@ -1,13 +1,23 @@
-{% extends 'base.html.twig' %}
+{% include "base.html.twig" %}
 
-{% block title %}Edit Equipement{% endblock %}
+{% block title %}Edition de equipement
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Equipement</h1>
+	<div class="game-form-container">
+		<h1>Modifier l'equipement</h1>
+		<h2>{{equipement.label}}</h2>
 
-    {{ include('equipement/_form.html.twig', {'button_label': 'Update'}) }}
+		{% include "equipement/_form.html.twig" with {'button_label': 'Modifier'} %}
 
-    <a href="{{ path('app_equipement_index') }}">back to list</a>
+		<div class="action-buttons">
+			<a href="{{ path('app_equipement_index') }}" class="btn btn-back">
+				<i class="fas fa-arrow-left"></i>
+				Retour à la liste
+			</a>
+			{% include "equipement/_delete_form.html.twig" %}
+		</div>
+	</div>
 
-    {{ include('equipement/_delete_form.html.twig') }}
+
 {% endblock %}

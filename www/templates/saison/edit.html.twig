@@ -1,13 +1,23 @@
-{% extends 'base.html.twig' %}
+{% include "base.html.twig" %}
 
-{% block title %}Edit Saison{% endblock %}
+{% block title %}Edition de saison
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Saison</h1>
+	<div class="game-form-container">
+		<h1>Modifier le saison</h1>
+		<h2>{{saison.label}}</h2>
 
-    {{ include('saison/_form.html.twig', {'button_label': 'Update'}) }}
+		{% include "saison/_form.html.twig" with {'button_label': 'Modifier'} %}
 
-    <a href="{{ path('app_saison_index') }}">back to list</a>
+		<div class="action-buttons">
+			<a href="{{ path('app_saison_index') }}" class="btn btn-back">
+				<i class="fas fa-arrow-left"></i>
+				Retour à la liste
+			</a>
+			{% include "saison/_delete_form.html.twig" %}
+		</div>
+	</div>
 
-    {{ include('saison/_delete_form.html.twig') }}
+
 {% endblock %}

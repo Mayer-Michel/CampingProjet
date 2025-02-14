@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tarif index{% endblock %}
+{% block title %}Tarif{% endblock %}
 
 {% block body %}
-    <h1>Tarif index</h1>
+<div class="game-list-container">
+		{% include "components/_dashboard_button.html.twig" %}
+    <h1>Tarif</h1>
 
-    <table class="table">
+    <table class="game-table">
         <thead>
             <tr>
                 <th>Id</th>
@@ -19,8 +21,10 @@
                 <td>{{ tarif.id }}</td>
                 <td>{{ tarif.prix }}</td>
                 <td>
-                    <a href="{{ path('app_tarif_show', {'id': tarif.id}) }}">show</a>
-                    <a href="{{ path('app_tarif_edit', {'id': tarif.id}) }}">edit</a>
+                <div class="game-actions">
+                    <a href="{{ path('app_tarif_show', {'id': tarif.id}) }}" class="view-link">show</a>
+                    <a href="{{ path('app_tarif_edit', {'id': tarif.id}) }}" class="edit-link">edit</a>
+                    </div>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +35,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_tarif_new') }}">Create new</a>
+    <a href="{{ path('app_type_new') }}" class="add-game-btn">Create new tarif</a>
+	</div>
 {% endblock %}

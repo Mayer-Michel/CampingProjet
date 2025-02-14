@@ -31,16 +31,13 @@ class HomeController extends AbstractController
     }
 
 
-    #[Route('/hebergements', name: 'all_hebergement')]
-    public function all(HebergementRepository $hebergementRepository): Response
-    {
-        $hebergements = $hebergementRepository->findAll();
+    // #[Route('/hebergements', name: 'all_hebergement')]
+    // public function all(HebergementRepository $hebergementRepository): Response
+    // {
+    //     $hebergements = $hebergementRepository->findAll();
 
-        return $this->render('hebergements/index.html.twig', [
-            'hebergements' => $hebergements
-        ]);
-    }
-
-    
-
+    //     return $this->render('hebergements/index.html.twig', [
+    //         'hebergements' => $hebergements
+    //     ]);
+    // }
 }

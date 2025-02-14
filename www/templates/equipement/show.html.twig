@@ -1,26 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Equipement{% endblock %}
+{% block title %}Equipements
+{% endblock %}
 
 {% block body %}
-    <h1>Equipement</h1>
+	<div class="game-list-container">
+		<h1>{{ equipement.label }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ equipement.id }}</td>
-            </tr>
-            <tr>
-                <th>Label</th>
-                <td>{{ equipement.label }}</td>
-            </tr>
-        </tbody>
-    </table>
+		<table class="game-table">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Label</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{ equipement.id }}</td>
+					<td>{{ equipement.label }}</td>
+				</tr>
+			</tbody>
+		</table>
 
-    <a href="{{ path('app_equipement_index') }}">back to list</a>
+		<div class="action-buttons">
+			<div>
+				{# suppression #}
+				{% include "equipement/_delete_form.html.twig" with {'button_class': 'btn btn-delete'} %}
+			</div>
+			<div>
+				<a href="{{ path('app_equipement_edit' , {'id': equipement.id}) }}" class="btn btn-edit">Editer</a>
 
-    <a href="{{ path('app_equipement_edit', {'id': equipement.id}) }}">edit</a>
 
-    {{ include('equipement/_delete_form.html.twig') }}
-{% endblock %}
+			</div>
+			<div>
+				<a href="{{path('app_equipement_index')}}" class="btn btn-back">
+
+					<i class="fas fa-arrow-left"></i>Retour à la liste</a>
+
+			</div>
+
+		</div>
+
+	{% endblock %}

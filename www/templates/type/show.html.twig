@@ -1,26 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Type{% endblock %}
+{% block title %}Type
+{% endblock %}
 
 {% block body %}
-    <h1>Type</h1>
+	<div class="game-list-container">
+		<h1>{{ type.label }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ type.id }}</td>
-            </tr>
-            <tr>
-                <th>Label</th>
-                <td>{{ type.label }}</td>
-            </tr>
-        </tbody>
-    </table>
+		<table class="game-table">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Label</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{ type.id }}</td>
+					<td>{{ type.label }}</td>
+				</tr>
+			</tbody>
+		</table>
 
-    <a href="{{ path('app_type_index') }}">back to list</a>
+		<div class="action-buttons">
+			<div>
+				{# suppression #}
+				{% include "type/_delete_form.html.twig" with {'button_class': 'btn btn-delete'} %}
+			</div>
+			<div>
+				<a href="{{ path('app_type_edit' , {'id': type.id}) }}" class="btn btn-edit">Editer</a>
 
-    <a href="{{ path('app_type_edit', {'id': type.id}) }}">edit</a>
 
-    {{ include('type/_delete_form.html.twig') }}
-{% endblock %}
+			</div>
+			<div>
+				<a href="{{path('app_type_index')}}" class="btn btn-back">
+
+					<i class="fas fa-arrow-left"></i>Retour à la liste</a>
+
+			</div>
+
+		</div>
+
+	{% endblock %}

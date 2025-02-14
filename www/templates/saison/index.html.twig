@@ -1,39 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Saison index{% endblock %}
+{% block title %}Saison
+{% endblock %}
 
 {% block body %}
-    <h1>Saison index</h1>
+	<div class="game-list-container">
+		{% include "components/_dashboard_button.html.twig" %}
+		<h1>Saison</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Label</th>
-                <th>DateStart</th>
-                <th>DateEnd</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for saison in saisons %}
-            <tr>
-                <td>{{ saison.id }}</td>
-                <td>{{ saison.label }}</td>
-                <td>{{ saison.dateStart ? saison.dateStart|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ saison.dateEnd ? saison.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_saison_show', {'id': saison.id}) }}">show</a>
-                    <a href="{{ path('app_saison_edit', {'id': saison.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+		<table class="game-table">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Label</th>
+					<th>DateStart</th>
+					<th>DateEnd</th>
+					<th>actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for saison in saisons %}
+					<tr>
+						<td>{{ saison.id }}</td>
+						<td>{{ saison.label }}</td>
+						<td>{{ saison.dateStart ? saison.dateStart|date('Y-m-d H:i:s') : '' }}</td>
+						<td>{{ saison.dateEnd ? saison.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
+						<td>
+							<div class="game-actions">
+								<a href="{{ path('app_saison_show', {'id': saison.id}) }}" class="view-link">show</a>
+								<a href="{{ path('app_saison_edit', {'id': saison.id}) }}" class="edit-link">edit</a>
+							</div>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="5">no records found</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 
-    <a href="{{ path('app_saison_new') }}">Create new</a>
+		<a href="{{ path('app_saison_new') }}" class="add-game-btn">Create new</a>
+	</div>
 {% endblock %}

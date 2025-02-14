@@ -1,13 +1,23 @@
-{% extends 'base.html.twig' %}
+{% include "base.html.twig" %}
 
-{% block title %}Edit Rental{% endblock %}
+{% block title %}Edition de rental
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Rental</h1>
+	<div class="game-form-container">
+		<h1>Modifier le rental</h1>
+		<h2>Rental</h2>
 
-    {{ include('rental/_form.html.twig', {'button_label': 'Update'}) }}
+		{% include "rental/_form.html.twig" with {'button_label': 'Modifier'} %}
 
-    <a href="{{ path('app_rental_index') }}">back to list</a>
+		<div class="action-buttons">
+			<a href="{{ path('app_rental_index') }}" class="btn btn-back">
+				<i class="fas fa-arrow-left"></i>
+				Retour à la liste
+			</a>
+			{% include "rental/_delete_form.html.twig" %}
+		</div>
+	</div>
 
-    {{ include('rental/_delete_form.html.twig') }}
+
 {% endblock %}

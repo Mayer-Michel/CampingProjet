@@ -16,6 +16,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ReservationController extends AbstractController
 {
+    /**
+     * Méthode qui retourne la page de recherche des hebergements
+     * @Route("/resvation/search", name="app_reservation_search")
+     * @param Request $request, SessionInterface $session
+     * @return Response
+     */
     #[Route('/reservation/search', name: 'app_reservation_search', methods: ['GET', 'POST'])]
     public function searchForm(Request $request, SessionInterface $session): Response
     {
@@ -35,6 +41,12 @@ class ReservationController extends AbstractController
         ]);
     }
 
+    /**
+     * Méthode qui retourne les resultats
+     * @Route("/resvation/results", name="app_reservation_results")
+     * @param SessionInterface $session, HebergementRepository $hebergementRepository, TarifRepository $tarifRepo
+     * @return Response
+     */
     #[Route('/reservation/results', name: 'app_reservation_results', methods: ['GET'])]
     public function showResults(SessionInterface $session, HebergementRepository $hebergementRepository, TarifRepository $tarifRepo): Response
     {
@@ -94,6 +106,12 @@ class ReservationController extends AbstractController
     }
 
 
+    /**
+     * Méthode qui retourne la page detail avec les prix
+     * @Route("/resvation/results/detail/{id}", name="app_reservation_detail")
+     * @param SessionInterface $session, HebergementRepository $hebergementRepository, TarifRepository $tarifRepo, int $id
+     * @return Response
+     */
     #[Route('/reservation/results/detail/{id}', name: 'app_reservation_detail', methods: ['GET', 'POST'])]
     public function detailResults(SessionInterface $session, HebergementRepository $hebergementRepository, TarifRepository $tarifRepo, int $id): Response
     {
@@ -160,6 +178,13 @@ class ReservationController extends AbstractController
         ]);
     }
 
+
+    /**
+     * Méthode qui comfirme la reservation et le stocker dans la database
+     * @Route("/resvation/confirm/{id}", name="app_reservation_confirm")
+     * @param int $id, SessionInterface $session, HebergementRepository $hebergementRepo, TarifRepository $tarifRepo, EntityManagerInterface $entityManager, Security $security
+     * @return Response
+     */
     #[Route('/reservation/confirm/{id}', name: 'app_reservation_confirm')]
     public function confirmReservation(int $id, SessionInterface $session, HebergementRepository $hebergementRepo, TarifRepository $tarifRepo, EntityManagerInterface $entityManager, Security $security): Response
     {
@@ -214,6 +239,12 @@ class ReservationController extends AbstractController
         return $this->redirectToRoute('app_reservation_success');
     }
 
+    /**
+     * Méthode qui retourne la page de confirmation de reservation 
+     * @Route("/resvation/success", name="app_reservation_success")
+     * @param
+     * @return Response
+     */
     #[Route('/reservation/success', name: 'app_reservation_success')]
     public function reservationSuccess(): Response
     {
