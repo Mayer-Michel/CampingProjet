@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Saison;
 use App\Entity\Tarif;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

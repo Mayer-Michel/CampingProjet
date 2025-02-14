@@ -47,8 +47,8 @@ class AppFixtures extends Fixture
         //on crée un tableau avec les infos des users
         $array_user = [
             [
-                'email' => 'admin@admin.com', 
-                'password'=>'admin',
+                'email' => 'admin@admin.com',
+                'password' => 'admin',
                 'roles' => ['ROLE_ADMIN'],
                 'username' => 'administrateur'
             ],
@@ -61,10 +61,9 @@ class AppFixtures extends Fixture
         ];
 
         //on va boucler sur le tableau pour créer les users
-        foreach($array_user as $key => $value)
-        {
+        foreach ($array_user as $key => $value) {
             //on instancie un user
-            $user = new User(); 
+            $user = new User();
             $user->setEmail($value['email']);
             $user->setPassword($this->encoder->hashPassword($user, $value['password']));
             $user->setRoles($value['roles']);
@@ -72,7 +71,7 @@ class AppFixtures extends Fixture
             //on persiste les données
             $manager->persist($user);
             //on définit une référence pour pouvoir faire nos relations
-            $this->addReference('user_'.$key + 1, $user);
+            $this->addReference('user_' . $key + 1, $user);
         }
     }
 
@@ -83,17 +82,17 @@ class AppFixtures extends Fixture
      */
     public function loadTypes(ObjectManager $manager): void
     {
-        $array_types = ['Mobil-home','Tente meublée', 'Emplacement nus'];
+        $array_types = ['Mobil-home', 'Tente meublée', 'Emplacement nus'];
 
         //on boucle sur le tableau pour créer les types
-        foreach($array_types as $key => $value){
+        foreach ($array_types as $key => $value) {
             //on instancie une type
             $type = new Type();
             $type->setLabel($value);
             //on persiste les données
             $manager->persist($type);
             //on définit une référence pour pouvoir faire nos relations
-            $this->addReference('type_'.$key + 1, $type);
+            $this->addReference('type_' . $key + 1, $type);
         }
     }
 
@@ -134,14 +133,14 @@ class AppFixtures extends Fixture
         ];
 
         //on boucle sur le tableau pour créer les types
-        foreach($array_equipements as $key => $value){
+        foreach ($array_equipements as $key => $value) {
             //on instancie une type
             $equipement = new Equipement();
             $equipement->setLabel($value);
             //on persiste les données
             $manager->persist($equipement);
             //on définit une référence pour pouvoir faire nos relations
-            $this->addReference('equipement_'.$key + 1, $equipement);
+            $this->addReference('equipement_' . $key + 1, $equipement);
         }
     }
 
@@ -185,68 +184,131 @@ class AppFixtures extends Fixture
             //on persiste les données
             $manager->persist($saison);
             //on définit une référence pour pouvoir faire nos relations
-            $this->addReference('saison_'.$key + 1, $saison);
+            $this->addReference('saison_' . $key + 1, $saison);
         }
     }
 
 
     /**
-    * méthode pour générer les hebergements
-    * @param ObjectManager $manager
-    * @return void
-    */
-   public function loadHebergements(ObjectManager $manager): void
-   {
-       // Liste d'hébergements à insérer dans la base
-       $array_hebergements = [
-           [
-               'type' => 1, // Premier type
-               'capacite' => '5',
-               'surface' => '40',
-               'disponibilite' => true,
-               'description' => 'Hébergement confortable pour 5 personnes.',
-               'image' => 'image-1.jpeg', // Première image
-               'equipement' => [13, 15, 7, 8, 4, 6, 10]
-           ],
-           [
-               'type' => 1, // Deuxième type
-               'capacite' => '2',
-               'surface' => '20',
-               'disponibilite' => true,
-               'description' => 'Petit studio pour 2 personnes.',
-               'image' => 'image-2.jpeg', // Deuxième image
-               'equipement' => [3, 5, 7, 8]
-           ],
-           [
-               'type' => 2, // Premier type
-               'capacite' => '6',
-               'surface' => '60',
-               'disponibilite' => false,
-               'description' => 'Grande maison pour 6 personnes.',
-               'image' => 'image-3.jpeg', // Troisième image
-               'equipement' => [3, 5, 7, 8]
-           ]
-       ];
+     * méthode pour générer les hebergements
+     * @param ObjectManager $manager
+     * @return void
+     */
+    public function loadHebergements(ObjectManager $manager): void
+    {
+        // Liste d'hébergements à insérer dans la base
+        $array_hebergements = [
+            [
+                'type' => 1,
+                'capacite' => '5',
+                'surface' => '40',
+                'disponibilite' => true,
+                'description' => 'Hébergement confortable pour 5 personnes.',
+                'image' => 'images-1.jpeg',
+                'equipement' => [13, 15, 7, 8, 4, 6, 10]
+            ],
+            [
+                'type' => 1,
+                'capacite' => '2',
+                'surface' => '20',
+                'disponibilite' => true,
+                'description' => 'Petit studio pour 2 personnes.',
+                'image' => 'images-2.jpeg',
+                'equipement' => [3, 5, 7, 8]
+            ],
+            [
+                'type' => 2,
+                'capacite' => '6',
+                'surface' => '60',
+                'disponibilite' => false,
+                'description' => 'Grande maison pour 6 personnes.',
+                'image' => 'images-3.jpeg',
+                'equipement' => [3, 5, 7, 8]
+            ],
+            [
+                'type' => 1,
+                'capacite' => '4',
+                'surface' => '35',
+                'disponibilite' => true,
+                'description' => 'Appartement pour 4 personnes avec terrasse.',
+                'image' => 'images-4.jpeg',
+                'equipement' => [4, 6, 7, 10, 11]
+            ],
+            [
+                'type' => 2,
+                'capacite' => '3',
+                'surface' => '30',
+                'disponibilite' => true,
+                'description' => 'Studio moderne pour 3 personnes.',
+                'image' => 'images-5.jpeg',
+                'equipement' => [3, 8, 7, 12]
+            ],
+            [
+                'type' => 3,
+                'capacite' => '8',
+                'surface' => '90',
+                'disponibilite' => true,
+                'description' => 'Villa spacieuse pour 8 personnes avec piscine.',
+                'image' => 'images-6.jpeg',
+                'equipement' => [1, 2, 4, 8, 13]
+            ],
+            [
+                'type' => 1,
+                'capacite' => '6',
+                'surface' => '55',
+                'disponibilite' => false,
+                'description' => 'Appartement de luxe pour 6 personnes.',
+                'image' => 'images-7.jpeg',
+                'equipement' => [6, 7, 10, 13, 9]
+            ],
+            [
+                'type' => 2,
+                'capacite' => '4',
+                'surface' => '40',
+                'disponibilite' => true,
+                'description' => 'Appartement lumineux pour 4 personnes.',
+                'image' => 'images-8.jpeg',
+                'equipement' => [5, 7, 9, 12]
+            ],
+            [
+                'type' => 3,
+                'capacite' => '7',
+                'surface' => '70',
+                'disponibilite' => true,
+                'description' => 'Maison confortable pour 7 personnes.',
+                'image' => 'images-9.jpeg',
+                'equipement' => [2, 4, 10, 12, 5]
+            ],
+            [
+                'type' => 1,
+                'capacite' => '10',
+                'surface' => '120',
+                'disponibilite' => true,
+                'description' => 'Grande maison avec jardin pour 10 personnes.',
+                'image' => 'images-10.jpeg',
+                'equipement' => [4, 6, 11, 8, 2]
+            ]
+        ];
 
-       // Insertion des hébergements dans la base
-       foreach ($array_hebergements as $key => $value) {
-           $hebergement = new Hebergement();
-           $hebergement->setType($this ->getReference('type_'.$value['type'], Type::class));
-           $hebergement->setCapacity($value['capacite']);
-           $hebergement->setSurface($value['surface']);
-           $hebergement->setDisponibilite($value['disponibilite']);
-           $hebergement->setDescription($value['description']);
-           $hebergement->setImagePath($value['image']);
-           //on va devoir boucler sur $value['equipement'] pour faire les relations du many to many
-           foreach($value['equipement'] as $equipement){
-            $hebergement->addEquipement($this->getReference('equipement_'.$equipement, Equipement::class));
+        // Insertion des hébergements dans la base
+        foreach ($array_hebergements as $key => $value) {
+            $hebergement = new Hebergement();
+            $hebergement->setType($this->getReference('type_' . $value['type'], Type::class));
+            $hebergement->setCapacity($value['capacite']);
+            $hebergement->setSurface($value['surface']);
+            $hebergement->setDisponibilite($value['disponibilite']);
+            $hebergement->setDescription($value['description']);
+            $hebergement->setImagePath($value['image']);
+            //on va devoir boucler sur $value['equipement'] pour faire les relations du many to many
+            foreach ($value['equipement'] as $equipement) {
+                $hebergement->addEquipement($this->getReference('equipement_' . $equipement, Equipement::class));
+            }
+            //on persiste les données
+            $manager->persist($hebergement);
+            //on définit une référence pour pouvoir faire nos relations
+            $this->addReference('hebergement_' . $key + 1, $hebergement);
         }
-        //on persiste les données
-        $manager->persist($hebergement);
-        //on définit une référence pour pouvoir faire nos relations
-        $this->addReference('hebergement_'.$key + 1, $hebergement);
-       }
-   }
+    }
 
     /**
      * méthode pour générer les tarifs
@@ -280,12 +342,12 @@ class AppFixtures extends Fixture
         // Insère chaque tarif dans la base de données
         foreach ($array_tarifs as $key => $value) {
             $tarif = new Tarif();
-            $tarif->setSaison($this->getReference('saison_'.$value['saisonId'], Saison::class));
-            $tarif->setHebergement($this->getReference('hebergement_'.$value['hebergementId'], Hebergement::class));
+            $tarif->setSaison($this->getReference('saison_' . $value['saisonId'], Saison::class));
+            $tarif->setHebergement($this->getReference('hebergement_' . $value['hebergementId'], Hebergement::class));
             $tarif->setPrix($value['prix']);
             $manager->persist($tarif);
             //on définit une référence pour pouvoir faire nos relations
-            $this->addReference('tarif_'.$key + 1, $tarif);
+            $this->addReference('tarif_' . $key + 1, $tarif);
         }
     }
 
@@ -322,11 +384,11 @@ class AppFixtures extends Fixture
                 'dateEnd' => new \DateTime('2025-5-26')
             ]
         ];
-         // Insertion des rentals dans la base
+        // Insertion des rentals dans la base
         foreach ($array_rentals as $key => $value) {
             $rental = new Rental();
-            $rental->setUser($this ->getReference('user_'.$value['user'], User::class));
-            $rental->setHebergement($this ->getReference('hebergement_'.$value['hebergement'], Hebergement::class));
+            $rental->setUser($this->getReference('user_' . $value['user'], User::class));
+            $rental->setHebergement($this->getReference('hebergement_' . $value['hebergement'], Hebergement::class));
             $rental->setNbrAdult($value['nbrAdults']);
             $rental->setNbrChildren($value['nbrKids']);
             $rental->setDateStart($value['dateStart']);
@@ -335,6 +397,4 @@ class AppFixtures extends Fixture
             $manager->persist($rental);
         }
     }
-
-
 }

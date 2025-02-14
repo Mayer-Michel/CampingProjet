@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Résultats de la recherche</h1>
+
+        <div class="row">
+            {% for hebergement in availableHebergements %}
+                {% include "components/_hebergement_card.html.twig" with {'hebergement': hebergement} %}
+            {% endfor %}
+        </div>
+
+        {% if availableHebergements is empty %}
+            <p class="text-center text-danger">Aucun hébergement disponible.</p>
+        {% endif %}
+    </div>
+{% endblock %}

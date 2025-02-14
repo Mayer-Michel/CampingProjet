@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Hebergement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,33 +17,50 @@ class HebergementRepository extends ServiceEntityRepository
         parent::__construct($registry, Hebergement::class);
     }
 
-    /**
-    * Finds available accommodations between two dates.
-    */
-    public function findAvailableHebergements(\DateTimeInterface $dateStart, \DateTimeInterface $dateEnd)
+    public function findAvailableHebergements($dateStart, $dateEnd, ?int $type, int $adults, int $kids)
     {
         $entityManager = $this->getEntityManager();
-
         $qb = $entityManager->createQueryBuilder();
 
-        $query = $qb->select(
-            'h.id', 
-            'h.description', 
-            'h.capacity', 
-            'h.surface', 
+        $qb->select([
+            'h.id',
+            'h.capacity',
+            'h.surface',
+            'h.description',
             'h.imagePath',
-            'r.dateStart', 
-            'r.dateEnd'
-            )
+            't.label'
+        ])
             ->from(Hebergement::class, 'h')
-            ->leftJoin('h.rentals', 'r')
-            ->where('r.dateEnd < :dateStart OR r.dateStart > :dateEnd')  // No overlap between rental dates and selected dates
+            ->leftJoin('h.type', 't')
+            ->leftJoin('h.rentals', 'r') // Join rentals
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->isNull('r.id'), // No reservations at all
+                    $qb->expr()->orX(
+                        $qb->expr()->lt('r.dateEnd', ':dateStart'),  // Last reservation ended before the new one starts
+                        $qb->expr()->gt('r.dateStart', ':dateEnd')   // Next reservation starts after the new one ends
+                    )
+                )
+            )
             ->setParameter('dateStart', $dateStart)
-            ->setParameter('dateEnd', $dateEnd)
-            ->getQuery()->getResult();
-        
-        return $query;
+            ->setParameter('dateEnd', $dateEnd);
+
+        // Filter by type if provided
+        if ($type !== null) {
+            $qb->andWhere('h.type = :type')
+                ->setParameter('type', $type);
+        }
+
+        // Ensure the Hebergement can accommodate total guests (adults + kids)
+        $totalGuests = $adults + $kids;
+        $qb->andWhere('h.capacity >= :totalGuests')
+            ->setParameter('totalGuests', $totalGuests);
+
+        // Debugging: Dump the SQL to check what’s happening
+        dump($qb->getQuery()->getSQL(), $qb->getParameters()); // Debug
+        return $qb->getQuery()->getResult();
     }
+
 
     /**
      * méthode qui récupère un hebergement par son id avec les données
@@ -63,22 +81,22 @@ class HebergementRepository extends ServiceEntityRepository
             'h.capacity',
             'h.imagePath',
             't.label',
-    
+
         ])->from(Hebergement::class, 'h')
-        ->leftJoin('h.type', 't')
-        ->where('h.id = :id')
-        ->setParameter('id', $id)
-        ->getQuery()->getOneOrNullResult();
+            ->leftJoin('h.type', 't')
+            ->where('h.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery();
         // dd($query);
 
-        return $query;
+        return $query->getOneOrNullResult();
     }
 
     /**
      * méthode qui récupère les équipements lié à l'hebergement
      * @param int $id
      * @return array
-    */
+     */
     public function equipementByHeberg(int $id): array
     {
         $entityManager = $this->getEntityManager();
@@ -89,10 +107,10 @@ class HebergementRepository extends ServiceEntityRepository
             'e.id',
             'e.label'
         ])->from(Hebergement::class, 'h')
-        ->leftJoin('h.equipement', 'e')
-        ->where('h.id = :id')
-        ->setParameter('id', $id)
-        ->getQuery();
+            ->leftJoin('h.equipement', 'e')
+            ->where('h.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery();
 
         return $query->getResult();
     }
@@ -101,7 +119,7 @@ class HebergementRepository extends ServiceEntityRepository
     {
         // on appel l'entity manager
         $entityManager = $this->getEntityManager();
- 
+
         //METHODE AVEC DQL
         $qb = $entityManager->createQueryBuilder();
         //on crée la query
@@ -110,13 +128,12 @@ class HebergementRepository extends ServiceEntityRepository
             't.prix',
             's.label'
         ])->from(Hebergement::class, 'h')
-        ->leftJoin('h.tarif', 't')
-        ->leftJoin('t.saison', 's')
-        ->where('h.id = :id')
-        ->setParameter('id', $id)
-        ->getQuery()->getResult();
+            ->leftJoin('h.tarif', 't')
+            ->leftJoin('t.saison', 's')
+            ->where('h.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()->getResult();
 
         return $query;
     }
-
 }

@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Réserver un hébergement</h1>
+
+        <div class="card p-4 shadow">
+            {{ form_start(form, {'method': 'POST', 'action': path('app_reservation_search')}) }}
+                {{ form_widget(form) }}
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
