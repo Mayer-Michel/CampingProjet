@@ -159,14 +159,14 @@ class AppFixtures extends Fixture
                 'date_end' => new \DateTime('2025-06-30')
             ],
             [
-                'saison' => 'Haute saison',
+                'saison' => 'Très haute saison',
                 'date_start' => new \DateTime('2025-07-01'),
                 'date_end' => new \DateTime('2025-08-31')
             ],
             [
-                'saison' => 'Très haute saison',
-                'date_start' => new \DateTime('2025-06-01'),
-                'date_end' => new \DateTime('2025-06-30')
+                'saison' => 'Haute saison',
+                'date_start' => new \DateTime('2025-08-01'),
+                'date_end' => new \DateTime('2025-09-30')
             ],
             [
                 'saison' => 'Fermeture hivernale',
@@ -338,6 +338,186 @@ class AppFixtures extends Fixture
                 'hebergementId' => 2,
                 'prix' => '0'
             ],
+            [
+                'saisonId' => 1,
+                'hebergementId' => 1,
+                'prix' => '10'
+            ],
+            [
+                'saisonId' => 2,
+                'hebergementId' => 1,
+                'prix' => '30'
+            ],
+            [
+                'saisonId' => 3,
+                'hebergementId' => 1,
+                'prix' => '50'
+            ],
+            [
+                'saisonId' => 4,
+                'hebergementId' => 1,
+                'prix' => '0'
+            ],
+            [
+                'saisonId' => 1,
+                'hebergementId' => 3,
+                'prix' => '220'
+            ],
+            [
+                'saisonId' => 2,
+                'hebergementId' => 3,
+                'prix' => '322'
+            ],
+            [
+                'saisonId' => 3,
+                'hebergementId' => 3,
+                'prix' => '600'
+            ],
+            [
+                'saisonId' => 4,
+                'hebergementId' => 3,
+                'prix' => '0'
+            ],
+            [
+                'saisonId' => 1,
+                'hebergementId' => 4,
+                'prix' => '111'
+            ],
+            [
+                'saisonId' => 2,
+                'hebergementId' => 4,
+                'prix' => '300'
+            ],
+            [
+                'saisonId' => 3,
+                'hebergementId' => 4,
+                'prix' => '500'
+            ],
+            [
+                'saisonId' => 4,
+                'hebergementId' => 4,
+                'prix' => '0'
+            ],
+            [
+                'saisonId' => 1,
+                'hebergementId' => 5,
+                'prix' => '111'
+            ],
+            [
+                'saisonId' => 2,
+                'hebergementId' => 5,
+                'prix' => '300'
+            ],
+            [
+                'saisonId' => 3,
+                'hebergementId' => 5,
+                'prix' => '500'
+            ],
+            [
+                'saisonId' => 4,
+                'hebergementId' => 5,
+                'prix' => '0'
+            ],
+            [
+                'saisonId' => 1,
+                'hebergementId' => 6,
+                'prix' => '111'
+            ],
+            [
+                'saisonId' => 2,
+                'hebergementId' => 6,
+                'prix' => '300'
+            ],
+            [
+                'saisonId' => 3,
+                'hebergementId' => 6,
+                'prix' => '500'
+            ],
+            [
+                'saisonId' => 4,
+                'hebergementId' => 6,
+                'prix' => '0'
+            ],
+            [
+                'saisonId' => 1,
+                'hebergementId' => 7,
+                'prix' => '111'
+            ],
+            [
+                'saisonId' => 2,
+                'hebergementId' => 7,
+                'prix' => '300'
+            ],
+            [
+                'saisonId' => 3,
+                'hebergementId' => 7,
+                'prix' => '500'
+            ],
+            [
+                'saisonId' => 4,
+                'hebergementId' => 7,
+                'prix' => '0'
+            ],
+            [
+                'saisonId' => 1,
+                'hebergementId' => 8,
+                'prix' => '111'
+            ],
+            [
+                'saisonId' => 2,
+                'hebergementId' => 8,
+                'prix' => '300'
+            ],
+            [
+                'saisonId' => 3,
+                'hebergementId' => 8,
+                'prix' => '500'
+            ],
+            [
+                'saisonId' => 4,
+                'hebergementId' => 8,
+                'prix' => '0'
+            ],
+            [
+                'saisonId' => 1,
+                'hebergementId' => 9,
+                'prix' => '111'
+            ],
+            [
+                'saisonId' => 2,
+                'hebergementId' => 9,
+                'prix' => '300'
+            ],
+            [
+                'saisonId' => 3,
+                'hebergementId' => 9,
+                'prix' => '500'
+            ],
+            [
+                'saisonId' => 4,
+                'hebergementId' => 9,
+                'prix' => '0'
+            ],
+            [
+                'saisonId' => 1,
+                'hebergementId' => 10,
+                'prix' => '111'
+            ],
+            [
+                'saisonId' => 2,
+                'hebergementId' => 10,
+                'prix' => '300'
+            ],
+            [
+                'saisonId' => 3,
+                'hebergementId' => 10,
+                'prix' => '500'
+            ],
+            [
+                'saisonId' => 4,
+                'hebergementId' => 10,
+                'prix' => '0'
+            ],
         ];
         // Insère chaque tarif dans la base de données
         foreach ($array_tarifs as $key => $value) {
@@ -365,7 +545,8 @@ class AppFixtures extends Fixture
                 'nbrAdults' => '3',
                 'nbrKids' => '2',
                 'dateStart' => new \DateTime('2025-4-13'),
-                'dateEnd' => new \DateTime('2025-4-26')
+                'dateEnd' => new \DateTime('2025-4-26'),
+                'prix' => '2222'
             ],
             [
                 'user' => 1,
@@ -373,7 +554,8 @@ class AppFixtures extends Fixture
                 'nbrAdults' => '2',
                 'nbrKids' => '0',
                 'dateStart' => new \DateTime('2025-6-13'),
-                'dateEnd' => new \DateTime('2025-6-26')
+                'dateEnd' => new \DateTime('2025-6-26'),
+                'prix' => '1111'
             ],
             [
                 'user' => 1,
@@ -381,7 +563,8 @@ class AppFixtures extends Fixture
                 'nbrAdults' => '4',
                 'nbrKids' => '2',
                 'dateStart' => new \DateTime('2025-5-13'),
-                'dateEnd' => new \DateTime('2025-5-26')
+                'dateEnd' => new \DateTime('2025-5-26'),
+                'prix' => '3333'
             ]
         ];
         // Insertion des rentals dans la base
@@ -393,6 +576,7 @@ class AppFixtures extends Fixture
             $rental->setNbrChildren($value['nbrKids']);
             $rental->setDateStart($value['dateStart']);
             $rental->setDateEnd($value['dateEnd']);
+            $rental->setPrixTotal($value['prix']);
 
             $manager->persist($rental);
         }

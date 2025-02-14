@@ -15,6 +15,14 @@
 		<p>{{ hebergement.description }}</p>
 		<div class="game-info-container">
 			<p>{{ hebergement.capacity }}</p>
+			{# Display price if available #}
+        {% if hebergementTarifs[hebergement['id']] is not null %}
+            <p>Prix par nuits: {{ hebergementTarifs[hebergement['id']].prix }}€</p>
+            <p>Prix total: {{ hebergementTotal[hebergement['id']] }}€</p>
+            <p>Saison: {{ hebergementTarifs[hebergement['id']].label }}</p>
+        {% else %}
+            <p class="text-danger">Prix non disponible</p>
+        {% endif %}
 			<a href="{{path('app_detail', {'id': hebergement.id})}}" class="btn btn-detail">Voir détail</a>
 		</div>
 </div>

@@ -24,9 +24,9 @@ class ReservationType extends AbstractType
         ])
         ->add('type', ChoiceType::class, [
             'choices' => [
-                'Mobile-home' => 10,
-                'Tente meublée' => 11,
-                'Emplacement nus' => 12,
+                'Mobile-home' => 4,
+                'Tente meublée' => 5,
+                'Emplacement nus' => 6,
             ],
             'required' => false,
         ])

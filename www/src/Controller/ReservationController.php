@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ReservationType;
 use App\Repository\HebergementRepository;
+use App\Repository\TarifRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +33,7 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/reservation/results', name: 'app_reservation_results', methods: ['GET'])]
-    public function showResults(SessionInterface $session, HebergementRepository $hebergementRepository): Response
+    public function showResults(SessionInterface $session, HebergementRepository $hebergementRepository, TarifRepository $tarifRepo): Response
     {
         // Retrieve form data from session
         $data = $session->get('reservation_data');
@@ -57,9 +58,37 @@ class ReservationController extends AbstractController
             $kids
         );
 
+        // Convert the string dates to DateTime objects
+        $dateStartObj = $dateStart;
+        $dateEndObj = $dateEnd;
+
+        // Calculate the number of nights
+        $interval = $dateStartObj->diff($dateEndObj);
+        $numberOfNights = $interval->days;
+
+
+        $hebergementTarifs = [];
+        $hebergementTotals = [];
+        foreach ($availableHebergements as $hebergement) {
+            $tarifs = $tarifRepo->getHebergementTarifByDate($hebergement['id'], $dateStart, $dateEnd);
+            
+            if (!empty($tarifs)) {
+                $tarif = $tarifs[0];
+                $hebergementTarifs[$hebergement['id']] = $tarif; // Assuming you get one tariff
+                $hebergementTotal[$hebergement['id']] = $numberOfNights * $tarif['prix'];
+
+                 
+            } else {
+                $hebergementTarifs[$hebergement['id']] = null;
+                $hebergementTotal[$hebergement['id']] = 0;
+            }
+        }
+
         // Return the result to the Twig template
         return $this->render('home/reservation_results.html.twig', [
             'availableHebergements' => $availableHebergements,
+            'hebergementTarifs' => $hebergementTarifs, // Pass tariffs for each hebergement
+            'hebergementTotal' => $hebergementTotal,
         ]);
     }
 }

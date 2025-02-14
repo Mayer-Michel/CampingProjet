@@ -32,6 +32,9 @@ class Rental
     #[ORM\ManyToOne(inversedBy: 'rentals')]
     private ?Hebergement $hebergement = null;
 
+    #[ORM\Column]
+    private ?int $prixTotal = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +108,18 @@ class Rental
     public function setHebergement(?Hebergement $hebergement): static
     {
         $this->hebergement = $hebergement;
+
+        return $this;
+    }
+
+    public function getPrixTotal(): ?int
+    {
+        return $this->prixTotal;
+    }
+
+    public function setPrixTotal(int $prixTotal): static
+    {
+        $this->prixTotal = $prixTotal;
 
         return $this;
     }

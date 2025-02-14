@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Hebergement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,7 +16,12 @@ class HebergementRepository extends ServiceEntityRepository
         parent::__construct($registry, Hebergement::class);
     }
 
-    public function findAvailableHebergements($dateStart, $dateEnd, ?int $type, int $adults, int $kids)
+    /**
+     * méthode qui récupère tous les hebergements disponible par rapport les input du client avec les données
+     * @param int $dateStart, $dateEnd, ?int $type, int $adults, int $kids
+     * @return array
+     */
+    public function findAvailableHebergements($dateStart, $dateEnd, ?int $type, int $adults, int $kids): array
     {
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
@@ -115,25 +119,4 @@ class HebergementRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    public function getHebergementTarif(int $id): array
-    {
-        // on appel l'entity manager
-        $entityManager = $this->getEntityManager();
-
-        //METHODE AVEC DQL
-        $qb = $entityManager->createQueryBuilder();
-        //on crée la query
-        $query = $qb->select([
-            't.id',
-            't.prix',
-            's.label'
-        ])->from(Hebergement::class, 'h')
-            ->leftJoin('h.tarif', 't')
-            ->leftJoin('t.saison', 's')
-            ->where('h.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()->getResult();
-
-        return $query;
-    }
 }
