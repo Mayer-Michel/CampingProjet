@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Rental;
 use App\Form\ReservationType;
 use App\Repository\HebergementRepository;
 use App\Repository\TarifRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -27,7 +30,7 @@ class ReservationController extends AbstractController
             return $this->redirectToRoute('app_reservation_results');
         }
 
-        return $this->render('home/reservation_form.html.twig', [
+        return $this->render('reservation/reservation_form.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -71,13 +74,11 @@ class ReservationController extends AbstractController
         $hebergementTotal = [];
         foreach ($availableHebergements as $hebergement) {
             $tarifs = $tarifRepo->getHebergementTarifByDate($hebergement['id'], $dateStart, $dateEnd);
-            
+
             if (!empty($tarifs)) {
                 $tarif = $tarifs[0];
                 $hebergementTarifs[$hebergement['id']] = $tarif; // Assuming you get one tariff
                 $hebergementTotal[$hebergement['id']] = $numberOfNights * $tarif['prix'];
-
-                 
             } else {
                 $hebergementTarifs[$hebergement['id']] = null;
                 $hebergementTotal[$hebergement['id']] = 0;
@@ -85,7 +86,7 @@ class ReservationController extends AbstractController
         }
 
         // Return the result to the Twig template
-        return $this->render('home/reservation_results.html.twig', [
+        return $this->render('reservation/reservation_results.html.twig', [
             'availableHebergements' => $availableHebergements,
             'hebergementTarifs' => $hebergementTarifs, // Pass tariffs for each hebergement
             'hebergementTotal' => $hebergementTotal,
@@ -138,13 +139,11 @@ class ReservationController extends AbstractController
         $hebergementTotal = [];
         foreach ($availableHebergements as $hebergement) {
             $tarifs = $tarifRepo->getHebergementTarifByDate($hebergement['id'], $dateStart, $dateEnd);
-            
+
             if (!empty($tarifs)) {
                 $tarif = $tarifs[0];
                 $hebergementTarifs[$hebergement['id']] = $tarif; // Assuming you get one tariff
                 $hebergementTotal[$hebergement['id']] = $numberOfNights * $tarif['prix'];
-
-                 
             } else {
                 $hebergementTarifs[$hebergement['id']] = null;
                 $hebergementTotal[$hebergement['id']] = 0;
@@ -161,4 +160,65 @@ class ReservationController extends AbstractController
         ]);
     }
 
+    #[Route('/reservation/confirm/{id}', name: 'app_reservation_confirm')]
+    public function confirmReservation(int $id, SessionInterface $session, HebergementRepository $hebergementRepo, TarifRepository $tarifRepo, EntityManagerInterface $entityManager, Security $security): Response
+    {
+        // Retrieve form data from session
+        $data = $session->get('reservation_data');
+
+        if (!$data) {
+            return $this->redirectToRoute('app_reservation_search');
+        }
+
+        $user = $security->getUser(); // Get the authenticated user
+
+        $dateStart = $data['dateStart'];
+        $dateEnd = $data['dateEnd'];
+
+        $interval = $dateStart->diff($dateEnd);
+        $numberOfNights = $interval->days;
+
+        // Get Hebergement
+        $hebergement = $hebergementRepo->find($id);
+        if (!$hebergement) {
+            throw $this->createNotFoundException("Hébergement non trouvé");
+        }
+
+        // Get Tariff
+        $tarifs = $tarifRepo->getHebergementTarifByDate($id, $data['dateStart'], $data['dateEnd']);
+        if (empty($tarifs)) {
+            return $this->redirectToRoute('app_reservation_results', ['error' => 'Tarif non disponible']);
+        }
+
+        $pricePerNight = $tarifs[0]['prix'];
+        $totalPrice = $numberOfNights * $pricePerNight;
+
+        // Retrieve number of adults and children
+        $nbrAdult = $data['adults'];
+        $nbrChildren = $data['kids'];
+
+        // Create Rental Entry
+        $rental = new Rental();
+        $rental->setUser($user);
+        $rental->setHebergement($hebergement);
+        $rental->setDateStart($dateStart);
+        $rental->setDateEnd($dateEnd);
+        $rental->setPrixTotal($totalPrice);
+        $rental->setNbrAdult($nbrAdult);
+        $rental->setNbrChildren($nbrChildren);
+
+        $entityManager->persist($rental);
+        $entityManager->flush();
+
+        // Redirect to confirmation page
+        return $this->redirectToRoute('app_reservation_success');
+    }
+
+    #[Route('/reservation/success', name: 'app_reservation_success')]
+    public function reservationSuccess(): Response
+    {
+        return $this->render('reservation/reservation_success.html.twig', [
+            'message' => 'Votre réservation a été enregistrée avec succès !'
+        ]);
+    }
 }

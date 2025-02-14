@@ -39,5 +39,12 @@
 			<p>{{hebergement.description}}</p>
 		</div>
 
+		{# Reservation Button #}
+		<div class="reservation-button">
+			<a href="{{ path('app_reservation_confirm', {'id': hebergement.id}) }}" class="btn btn-primary">
+				Réserver Maintenant
+			</a>
+		</div>
+
 	</div>
 </div>
