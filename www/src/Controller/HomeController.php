@@ -41,15 +41,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/reservation', name: 'app_reservation', methods: ['GET'])]
-    public function reservation(TypeRepository $typeRepository): Response
-    {
-        $typeHeber = $typeRepository->findAll();
-
-        return $this->render('reservation/reservation.html.twig', [
-            'typeHeber' => $typeHeber,
-            'hebergements' => [] // Initially empty
-        ]);
-    }
+    
 
 }

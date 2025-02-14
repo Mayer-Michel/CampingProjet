@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Type{% endblock %}
+
+{% block body %}
+    <h1>Create new Type</h1>
+
+    {{ include('type/_form.html.twig') }}
+
+    <a href="{{ path('app_type_index') }}">back to list</a>
+{% endblock %}

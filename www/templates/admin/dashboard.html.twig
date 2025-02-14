@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Dashboard
+{% endblock %}
+
+{% block body %}
+	<h1>Dashboard</h1>
+
+	<div class="action-buttons">
+		<a href="{{ path('app_saison_index') }}" class="btn btn-edit">Voir les saisons</a>
+		<a href="{{ path('app_rental_index') }}" class="btn btn-edit">Voir les rentals</a>
+		<a href="{{ path('app_user_index') }}" class="btn btn-edit">Gérer les utilisateurs</a>
+		<a href="{{ path('app_equipement_index') }}" class="btn btn-edit">Voir les equipements</a>
+		<a href="{{ path('app_tarif_index') }}" class="btn btn-edit">Voir les tarifs</a>
+		<a href="{{ path('app_type_index') }}" class="btn btn-edit">Voir les types</a>
+
+
+	</div>
+{% endblock %}

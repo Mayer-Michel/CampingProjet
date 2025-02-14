@@ -21,7 +21,7 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% if app.user %}
                     {% if is_granted('ROLE_ADMIN') %}
-                        <a class="dropdown-item" href="#">Dashboard</a>
+                        <a class="dropdown-item" href="{{ path('app_admin_dashboard') }}">Dashboard</a>
                     {% endif %}
                     <a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a>
                 {% else %}

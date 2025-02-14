@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rental index{% endblock %}
+
+{% block body %}
+    <h1>Rental index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NbrAdult</th>
+                <th>NbrChildren</th>
+                <th>DateStart</th>
+                <th>DateEnd</th>
+                <th>PrixTotal</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for rental in rentals %}
+            <tr>
+                <td>{{ rental.id }}</td>
+                <td>{{ rental.nbrAdult }}</td>
+                <td>{{ rental.nbrChildren }}</td>
+                <td>{{ rental.dateStart ? rental.dateStart|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ rental.dateEnd ? rental.dateEnd|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ rental.prixTotal }}</td>
+                <td>
+                    <a href="{{ path('app_rental_show', {'id': rental.id}) }}">show</a>
+                    <a href="{{ path('app_rental_edit', {'id': rental.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_rental_new') }}">Create new</a>
+{% endblock %}
