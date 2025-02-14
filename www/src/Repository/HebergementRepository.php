@@ -119,4 +119,27 @@ class HebergementRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    /**
+     * méthode qui récupère les équipements lié à l'hebergement
+     * @param int $id
+     * @return array
+     */
+    public function typeByHeberg(int $id): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $qb = $entityManager->createQueryBuilder();
+
+        $query = $qb->select([
+            't.id',
+            't.label'
+        ])->from(Hebergement::class, 'h')
+            ->leftJoin('h.type', 't')
+            ->where('h.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
 }

@@ -42,26 +42,24 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/hebergements/detail/{id}', name: 'app_detail')]
-    public function hebergementDetail(HebergementRepository $repo, TarifRepository $tarif, int $id)
-    {
-        // On recupére l'hebergement avec les données
-        $hebergements = $repo->hebergementDetail($id);
+    // #[Route('/hebergements/detail/{id}', name: 'app_detail')]
+    // public function hebergementDetail(HebergementRepository $repo, TarifRepository $tarif, int $id)
+    // {
+    //     // On recupére l'hebergement avec les données
+    //     $hebergements = $repo->hebergementDetail($id);
 
-        $equipements = $repo->equipementByHeberg($id);
+    //     $equipements = $repo->equipementByHeberg($id);
 
-        // $saisons = $tarif->getTarifBySaison($id);
-
-        $prices = $repo->getHebergementTarif($id);
+    //     // $saisons = $tarif->getTarifBySaison($id);
 
 
-        return $this->render('hebergements/detail.html.twig', [
-            'hebergement' => $hebergements,
-            'prices' => $prices,
-            'equipements' => $equipements,
-            // 'saison' => $saisons
-        ]);
-    }
+    //     return $this->render('hebergements/detail.html.twig', [
+    //         'hebergement' => $hebergements,
+    //         'prices' => $prices,
+    //         'equipements' => $equipements,
+    //         // 'saison' => $saisons
+    //     ]);
+    // }
 
     #[Route('/reservation', name: 'app_reservation', methods: ['GET'])]
     public function reservation(TypeRepository $typeRepository): Response

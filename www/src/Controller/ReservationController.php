@@ -68,7 +68,7 @@ class ReservationController extends AbstractController
 
 
         $hebergementTarifs = [];
-        $hebergementTotals = [];
+        $hebergementTotal = [];
         foreach ($availableHebergements as $hebergement) {
             $tarifs = $tarifRepo->getHebergementTarifByDate($hebergement['id'], $dateStart, $dateEnd);
             
@@ -91,4 +91,74 @@ class ReservationController extends AbstractController
             'hebergementTotal' => $hebergementTotal,
         ]);
     }
+
+
+    #[Route('/reservation/results/detail/{id}', name: 'app_reservation_detail', methods: ['GET', 'POST'])]
+    public function detailResults(SessionInterface $session, HebergementRepository $hebergementRepository, TarifRepository $tarifRepo, int $id): Response
+    {
+
+        // On recupére l'hebergement avec les données
+        $hebergements = $hebergementRepository->hebergementDetail($id);
+        $equipements = $hebergementRepository->equipementByHeberg($id);
+        $types = $hebergementRepository->typeByHeberg($id);
+
+        // Retrieve form data from session
+        $data = $session->get('reservation_data');
+
+        if (!$data) {
+            // Handle the case where no form data is available (e.g., user accessed the results page directly)
+            return $this->redirectToRoute('app_reservation_search');
+        }
+
+        $dateStart = $data['dateStart'];
+        $dateEnd = $data['dateEnd'];
+        $type = $data['type'];
+        $adults = $data['adults'];
+        $kids = $data['kids'];
+
+        // Query available hebergements based on form data
+        $availableHebergements = $hebergementRepository->findAvailableHebergements(
+            $dateStart,
+            $dateEnd,
+            $type,
+            $adults,
+            $kids
+        );
+
+        // Convert the string dates to DateTime objects
+        $dateStartObj = $dateStart;
+        $dateEndObj = $dateEnd;
+
+        // Calculate the number of nights
+        $interval = $dateStartObj->diff($dateEndObj);
+        $numberOfNights = $interval->days;
+
+
+        $hebergementTarifs = [];
+        $hebergementTotal = [];
+        foreach ($availableHebergements as $hebergement) {
+            $tarifs = $tarifRepo->getHebergementTarifByDate($hebergement['id'], $dateStart, $dateEnd);
+            
+            if (!empty($tarifs)) {
+                $tarif = $tarifs[0];
+                $hebergementTarifs[$hebergement['id']] = $tarif; // Assuming you get one tariff
+                $hebergementTotal[$hebergement['id']] = $numberOfNights * $tarif['prix'];
+
+                 
+            } else {
+                $hebergementTarifs[$hebergement['id']] = null;
+                $hebergementTotal[$hebergement['id']] = 0;
+            }
+        }
+
+        // Return the result to the Twig template
+        return $this->render('hebergements/detail.html.twig', [
+            'hebergement' => $hebergements,
+            'equipements' => $equipements,
+            'hebergementTarifs' => $hebergementTarifs, // Pass tariffs for each hebergement
+            'hebergementTotal' => $hebergementTotal,
+            'types' => $types,
+        ]);
+    }
+
 }

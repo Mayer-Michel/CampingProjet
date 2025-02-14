@@ -7,8 +7,9 @@
 
 	<div class="game-detail-content">
 
-
-		<h1 class="game-title">{{hebergement.id}}</h1>
+		{% for type in types %}
+			<h1 class="game-title">{{type.label}}</h1>
+		{% endfor %}
 		{# affichage des consoles #}
 		<div class="game-consoles mb-3">
 			{% for equipement in equipements %}
@@ -20,10 +21,16 @@
 			<div class="info-item">
 				<span class="info-label">surface:</span>
 				<span class="info-value">{{hebergement.surface}}</span>
-				{% for prix in prices %}
-				<span class="info-value">{{prix.label}}</span>
-				<span class="info-value">{{prix.prix}}</span>
-				{% endfor %}
+				{% if hebergementTarifs[hebergement['id']] is not null %}
+					<p>Prix par nuits:
+						{{ hebergementTarifs[hebergement['id']].prix }}€</p>
+					<p>Prix total:
+						{{ hebergementTotal[hebergement['id']] }}€</p>
+					<p>Saison:
+						{{ hebergementTarifs[hebergement['id']].label }}</p>
+				{% else %}
+					<p class="text-danger">Prix non disponible</p>
+				{% endif %}
 			</div>
 		</div>
 
