@@ -23,6 +23,8 @@
                     {% if is_granted('ROLE_ADMIN') %}
                         <a class="dropdown-item" href="{{ path('app_admin_dashboard') }}">Dashboard</a>
                     {% endif %}
+                    <a class="dropdown-item" href="{{ path('app_user_profile', {'id': app.user.id}) }}" >Profil</a>
+                    <a class="dropdown-item" href="{{ path('app_reservation_history', {'id': app.user.id}) }}">History</a>
                     <a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a>
                 {% else %}
                     <a class="dropdown-item" href="{{ path('app_login') }}">Connexion</a>

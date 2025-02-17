@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Rental;
 use App\Form\RentalType;
+use App\Repository\UserRepository;
 use App\Repository\RentalRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/admin/rental')]
 final class RentalController extends AbstractController
@@ -71,11 +73,12 @@ final class RentalController extends AbstractController
     #[Route('/admin/{id}', name: 'app_rental_delete', methods: ['POST'])]
     public function delete(Request $request, Rental $rental, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$rental->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $rental->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($rental);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_rental_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }

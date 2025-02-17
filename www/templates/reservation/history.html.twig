@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des Réservations{% endblock %}
+
+{% block body %}
+    <h2>Historique de vos réservations</h2>
+    {% if reservations is empty %}
+        <p>Aucune réservation trouvée.</p>
+    {% else %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Hébergement</th>
+                    <th>Date Début</th>
+                    <th>Date Fin</th>
+                    <th>Prix Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.description }}</td>
+                        <td>{{ reservation.dateStart|date('d/m/Y') }}</td>
+                        <td>{{ reservation.dateEnd|date('d/m/Y') }}</td>
+                        <td>{{ reservation.prixTotal }}€</td>
+                        <td>
+                            {% if reservation.statu == 1 %}
+                                <!-- Pending: Show confirm and cancel buttons -->
+                                <form action="{{ path('app_reservation_confirm', {'id': reservation.reservationId}) }}" method="POST" style="display:inline;">
+                                    <button type="submit" name="action" value="validate" class="btn btn-success">Confirmer</button>
+                                </form>
+                                <form action="{{ path('reservation_cancel', {'id': reservation.reservationId}) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">Annuler</button>
+                                </form>
+                            {% elseif reservation.statu == 2 %}
+                                <!-- Confirmed: Only show cancel button -->
+                                <form action="{{ path('reservation_cancel', {'id': reservation.reservationId}) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">Annuler</button>
+                                </form>
+                            {% else %}
+                                <!-- Cancelled: No buttons displayed -->
+                                <button class="btn btn-secondary" disabled>Annulée</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

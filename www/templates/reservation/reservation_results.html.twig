@@ -5,8 +5,27 @@
         <h1 class="text-center mb-4">Résultats de la recherche</h1>
 
         <div class="row">
+            {% set fermeture_hiver_displayed = false %}
+
             {% for hebergement in availableHebergements %}
-                {% include "components/_hebergement_card.html.twig" with {'hebergement': hebergement} %}
+                {% set totalPrice = hebergementTotal[hebergement.id] %}
+
+                {% if totalPrice == 0 and not fermeture_hiver_displayed %}
+                    <!-- Display the "Fermeture d'hiver" message only once -->
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Pas disponible</h5>
+                                <p class="card-text">Ce logement est fermé pendant la période sélectionnée.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% set fermeture_hiver_displayed = true %}
+                {% endif %}
+
+                {% if totalPrice != 0 %}
+                    {% include "components/_hebergement_card.html.twig" with {'hebergement': hebergement} %}
+                {% endif %}
             {% endfor %}
         </div>
 

@@ -1,0 +1,23 @@
+{% include "base.html.twig" %}
+
+{% block title %}Edition de user
+{% endblock %}
+
+{% block body %}
+	<div class="game-form-container">
+		<h1>Modifier le user</h1>
+		<h2>user</h2>
+
+		{% include "user/_form.html.twig" with {'button_label': 'Modifier'} %}
+
+		<div class="action-buttons">
+			<a href="{{ path('app_user_index') }}" class="btn btn-back">
+				<i class="fas fa-arrow-left"></i>
+				Retour à la liste
+			</a>
+			{% include "user/_delete_form.html.twig" %}
+		</div>
+	</div>
+
+
+{% endblock %}

@@ -541,6 +541,7 @@ class AppFixtures extends Fixture
         $array_rentals = [
             [
                 'user' => 1,
+                'status' => '1',
                 'hebergement' => 1,
                 'nbrAdults' => '3',
                 'nbrKids' => '2',
@@ -550,6 +551,7 @@ class AppFixtures extends Fixture
             ],
             [
                 'user' => 1,
+                'status' => '2',
                 'hebergement' => 2,
                 'nbrAdults' => '2',
                 'nbrKids' => '0',
@@ -559,6 +561,7 @@ class AppFixtures extends Fixture
             ],
             [
                 'user' => 1,
+                'status' => '3',
                 'hebergement' => 3,
                 'nbrAdults' => '4',
                 'nbrKids' => '2',
@@ -572,6 +575,7 @@ class AppFixtures extends Fixture
             $rental = new Rental();
             $rental->setUser($this->getReference('user_' . $value['user'], User::class));
             $rental->setHebergement($this->getReference('hebergement_' . $value['hebergement'], Hebergement::class));
+            $rental->setStatu($value['status']);
             $rental->setNbrAdult($value['nbrAdults']);
             $rental->setNbrChildren($value['nbrKids']);
             $rental->setDateStart($value['dateStart']);

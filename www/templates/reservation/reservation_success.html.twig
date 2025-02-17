@@ -1,15 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Réservation Confirmée{% endblock %}
+{% block title %}Confirmation de Réservation{% endblock %}
 
 {% block body %}
-<div class="container text-center mt-5">
-    <h1 class="text-success">✅ Réservation Confirmée !</h1>
-    <p class="lead">Votre réservation a été enregistrée avec succès.</p>
-    
-    <div class="mt-4">
-        <a href="{{ path('app_home') }}" class="btn btn-primary">Retour à l'accueil</a>
-        <a href="{{ path('app_reservation_results') }}" class="btn btn-secondary">Voir d'autres hébergements</a>
+    <div class="container text-center mt-5">
+        <h1 class="text-success">✅ Réservation en attente de validation</h1>
+        <p class="lead">Souhaitez-vous valider ou annuler votre réservation ?</p>
+
+        <div class="mt-4">
+            <h3>Statut de la réservation :
+                {% if reservation.statu == 1 %}
+                    <span class="badge bg-warning">🟡 En attente</span>
+                {% elseif reservation.statu == 2 %}
+                    <span class="badge bg-success">✅ Validée</span>
+                {% elseif reservation.statu == 3 %}
+                    <span class="badge bg-danger">❌ Annulée</span>
+                {% endif %}
+            </h3>
+        </div>
+
+        <form method="post" class="mt-4">
+            <input type="hidden" name="_token" value="{{ csrf_token('validate' ~ reservation.id) }}">
+
+            <button type="submit" name="action" value="validate" class="btn btn-success mt-3">✅ Valider</button>
+            <button type="submit" name="action" value="cancel" class="btn btn-danger mt-3">❌ Annuler</button>
+        </form>
+
+        <div class="mt-4">
+            <a href="{{ path('app_home') }}" class="btn btn-primary">Retour à l'accueil</a>
+            <a href="{{ path('app_reservation_history', {'id': reservation.user.id}) }}" class="btn btn-secondary">Voir mes réservations</a>
+        </div>
     </div>
-</div>
 {% endblock %}

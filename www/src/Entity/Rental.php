@@ -35,6 +35,9 @@ class Rental
     #[ORM\Column]
     private ?int $prixTotal = null;
 
+    #[ORM\Column(length: 20)]
+    private ?string $statu = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +123,18 @@ class Rental
     public function setPrixTotal(int $prixTotal): static
     {
         $this->prixTotal = $prixTotal;
+
+        return $this;
+    }
+
+    public function getStatu(): ?string
+    {
+        return $this->statu;
+    }
+
+    public function setStatu(string $statu): static
+    {
+        $this->statu = $statu;
 
         return $this;
     }

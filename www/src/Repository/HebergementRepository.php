@@ -26,6 +26,7 @@ class HebergementRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
 
+        // Start building the query
         $qb->select([
             'h.id',
             'h.capacity',
@@ -37,31 +38,33 @@ class HebergementRepository extends ServiceEntityRepository
             ->from(Hebergement::class, 'h')
             ->leftJoin('h.type', 't')
             ->leftJoin('h.rentals', 'r') // Join rentals
+
+            // Exclude Hebergements with conflicting reservations
             ->where(
                 $qb->expr()->orX(
                     $qb->expr()->isNull('r.id'), // No reservations at all
-                    $qb->expr()->orX(
-                        $qb->expr()->lt('r.dateEnd', ':dateStart'),  // Last reservation ended before the new one starts
+                    $qb->expr()->andX(
+                        $qb->expr()->lt('r.dateEnd', ':dateStart'),  // Last reservation ends before the new one starts
                         $qb->expr()->gt('r.dateStart', ':dateEnd')   // Next reservation starts after the new one ends
                     )
                 )
             )
+            // Filter by type if provided
             ->setParameter('dateStart', $dateStart)
             ->setParameter('dateEnd', $dateEnd);
 
-        // Filter by type if provided
         if ($type !== null) {
             $qb->andWhere('h.type = :type')
                 ->setParameter('type', $type);
         }
 
-        // Ensure the Hebergement can accommodate total guests (adults + kids)
+        // Ensure the Hebergement can accommodate the total number of guests (adults + kids)
         $totalGuests = $adults + $kids;
         $qb->andWhere('h.capacity >= :totalGuests')
             ->setParameter('totalGuests', $totalGuests);
 
         // Debugging: Dump the SQL to check what’s happening
-        dump($qb->getQuery()->getSQL(), $qb->getParameters()); // Debug
+        dump($qb->getQuery()->getSQL(), $qb->getParameters()); // Debugging SQL query
         return $qb->getQuery()->getResult();
     }
 
@@ -141,5 +144,4 @@ class HebergementRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
-
 }
