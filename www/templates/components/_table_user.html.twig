@@ -1,0 +1,35 @@
+<h2>{{title}}</h2>
+<table class="game-table">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Email</th>
+			<th>Roles</th>
+			<th>Username</th>
+			<th>actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for admin in users %}
+			<tr>
+				<td>{{ admin.id }}</td>
+				<td>{{ admin.email }}</td>
+				<td>{{ admin.roles|badge_user }}</td>
+
+				<td>{{ admin.username }}</td>
+				<td>
+					<div class="game-actions">
+						<a href="{{ path('app_user_show', {'id': admin.id}) }}" class="view-link">Voir</a>
+						<a href="{{ path('app_user_edit', {'id': admin.id}) }}" class="edit-link">Editer</a>
+
+					</div>
+
+				</td>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="6">Pas d'utilisateur trouvé</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

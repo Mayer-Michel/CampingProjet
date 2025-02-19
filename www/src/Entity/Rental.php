@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RentalRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RentalRepository::class)]
 class Rental
@@ -12,31 +13,43 @@ class Rental
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['api'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['api'])]
     private ?int $nbrAdult = null;
 
     #[ORM\Column]
+    #[Groups(['api'])]
     private ?int $nbrChildren = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['api'])]
     private ?\DateTimeInterface $dateStart = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['api'])]
     private ?\DateTimeInterface $dateEnd = null;
 
     #[ORM\ManyToOne(inversedBy: 'rentals')]
+    #[Groups(['api'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'rentals')]
+    #[Groups(['api'])]
     private ?Hebergement $hebergement = null;
 
     #[ORM\Column]
+    #[Groups(['api'])]
     private ?int $prixTotal = null;
 
     #[ORM\Column(length: 20)]
     private ?string $statu = null;
+
+    #[ORM\Column]
+    #[Groups(['api'])]
+    private ?bool $clean = null;
 
     public function getId(): ?int
     {
@@ -135,6 +148,18 @@ class Rental
     public function setStatu(string $statu): static
     {
         $this->statu = $statu;
+
+        return $this;
+    }
+
+    public function isClean(): ?bool
+    {
+        return $this->clean;
+    }
+
+    public function setClean(bool $clean): static
+    {
+        $this->clean = $clean;
 
         return $this;
     }

@@ -17,6 +17,10 @@ class RentalRepository extends ServiceEntityRepository
         parent::__construct($registry, Rental::class);
     }
 
+    /**
+     * @param User $user
+     * @return array
+     */
     public function getUserReservationHistory(User $user): array
     {
         $entityManager = $this->getEntityManager();
@@ -43,6 +47,30 @@ class RentalRepository extends ServiceEntityRepository
             ->orderBy('r.dateStart', 'DESC')
             ->getQuery();
     
+        return $query->getResult();
+    }
+
+    public function getReservations(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        
+        $query = $qb->select([
+                'r.id',
+                'u.username AS username',    
+                'r.dateStart',                  
+                'r.dateEnd',
+                'h.disponibilite',     
+                'r.clean',
+                't.label AS hebergementType'                 
+            ])
+            ->from(Rental::class, 'r')
+            ->leftJoin('r.user', 'u')                   
+            ->leftJoin('r.hebergement', 'h')             
+            ->leftJoin('h.type', 't')          
+            ->orderBy('r.dateStart', 'DESC')
+            ->getQuery();
+        
         return $query->getResult();
     }
 }

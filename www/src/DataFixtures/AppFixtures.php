@@ -4,7 +4,6 @@ namespace App\DataFixtures;
 
 use App\Entity\Equipement;
 use App\Entity\Hebergement;
-use App\Entity\Image;
 use App\Entity\Rental;
 use App\Entity\Saison;
 use App\Entity\Tarif;
@@ -542,6 +541,7 @@ class AppFixtures extends Fixture
             [
                 'user' => 1,
                 'status' => '1',
+                'clean' => false,
                 'hebergement' => 1,
                 'nbrAdults' => '3',
                 'nbrKids' => '2',
@@ -552,6 +552,7 @@ class AppFixtures extends Fixture
             [
                 'user' => 1,
                 'status' => '2',
+                'clean' => false,
                 'hebergement' => 2,
                 'nbrAdults' => '2',
                 'nbrKids' => '0',
@@ -562,6 +563,7 @@ class AppFixtures extends Fixture
             [
                 'user' => 1,
                 'status' => '3',
+                'clean' => false,
                 'hebergement' => 3,
                 'nbrAdults' => '4',
                 'nbrKids' => '2',
@@ -581,6 +583,7 @@ class AppFixtures extends Fixture
             $rental->setDateStart($value['dateStart']);
             $rental->setDateEnd($value['dateEnd']);
             $rental->setPrixTotal($value['prix']);
+            $rental->setClean($value['clean']);
 
             $manager->persist($rental);
         }

@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class ReservationController extends AbstractController
 {
@@ -244,6 +246,12 @@ class ReservationController extends AbstractController
         ]);
     }
 
+    /**
+     * Méthode qui retourne la page de confirmation de la reservation
+     * @Route("/resvation/success/{id}", name="app_reservation_success")
+     * @param int $id, RentalRepository $rentalRepo, Request $request, EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/reservation/success/{id}', name: 'app_reservation_success', methods: ['GET', 'POST'])]
     public function reservationSuccess(int $id, RentalRepository $rentalRepo, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -324,6 +332,12 @@ class ReservationController extends AbstractController
         return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
     }
 
+    /**
+     * Méthode qui permet de confirmer une reservation
+     * @Route("/resvation/confirm/{id}", name="app_reservation_confirm")
+     * @param int $id, RentalRepository $rentalRepo, EntityManagerInterface $entityManager, Security $security
+     * @return Response
+     */
     #[Route('/reservation/confirm/{id}', name: 'app_reservation_confirm', methods: ['POST'])]
     public function statuReservation(int $id, RentalRepository $rentalRepo, EntityManagerInterface $entityManager, Security $security): Response
     {
@@ -348,6 +362,12 @@ class ReservationController extends AbstractController
         return $this->redirectToRoute('app_reservation_history', ['id' => $user->getId()]);
     }
 
+    /**
+     * Méthode qui permet d'annuler une reservation
+     * @Route("/resvation/cancel/{id}", name="app_reservation_cancel")
+     * @param int $id, RentalRepository $rentalRepo, EntityManagerInterface $entityManager, Security $security
+     * @return Response
+     */
     #[Route('/reservation/cancel/{id}', name: 'reservation_cancel', methods: ['POST'])]
     public function cancelReservation(int $id, RentalRepository $rentalRepo, EntityManagerInterface $entityManager, Security $security): Response
     {
@@ -370,5 +390,42 @@ class ReservationController extends AbstractController
 
         // Redirect to the reservation history page
         return $this->redirectToRoute('app_reservation_history', ['id' => $user->getId()]);
+    }
+
+    /**
+     * Méthode qui permet recuperer toutes les reservations
+     * @Route("/api/reservations", name="app_api_reservations", methods={"GET"})
+     * @param RentalRepository $rentalRepo
+     */
+    #[Route('/api/reservations', name: 'app_api_reservations', methods: ['GET'])]
+    public function apiReservations(RentalRepository $rentalRepo): Response
+    {
+        $reservations = $rentalRepo->getReservations();
+
+        return $this->json($reservations, 200, [], ['groups' => 'api']);
+    }
+
+    /**
+     * @Route("/api/reservations", name="update_cleaning_status", methods={"POST"})
+     */
+    #[Route('/api/reservations/{id}/clean', name: 'update_cleaning_status', methods: ['POST'])]
+    public function updateCleaningStatus(int $id, Request $request, RentalRepository $rentalRepo): Response
+    {
+        $reservation = $rentalRepo->find($id);
+        if (!$reservation) {
+            return new JsonResponse(['message' => 'Reservation not found'], 404);
+        }
+    
+        // Get the "clean" status from the request body
+        $data = json_decode($request->getContent(), true);
+        $clean = $data['clean'];
+    
+        // Update the clean status
+        $reservation->setClean($clean);
+    
+        // Persist the change to the database
+        $this->getDoctrine()->getManager()->flush();
+    
+        return new JsonResponse(['message' => 'Cleaning status updated successfully']);
     }
 }

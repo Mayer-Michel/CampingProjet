@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\HebergementRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -39,8 +40,14 @@ class HomeController extends AbstractController
      * @return Response
      */
     #[Route('/profile/{id}', name: 'app_user_profile', methods: ['GET', 'POST'])]
-    public function profile(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function profile(Request $request, UserRepository $userRepo, EntityManagerInterface $entityManager, int $id): Response
     {
+        // si l'id n'est pas celui de l'utilisateur connecté et si l'utilisateur n'est pas un admin 
+        $user = $userRepo->find($id);
+        if (!$user || ($user->getId() !== $this->getUser()->getId() && !$this->isGranted('ROLE_ADMIN'))) {
+            return $this->redirectToRoute('app_home');
+        }
+
         $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
         $form->handleRequest($request);
 
@@ -55,15 +62,34 @@ class HomeController extends AbstractController
             'form' => $form,
         ]);
     }
-    
 
-    // #[Route('/hebergements', name: 'all_hebergement')]
-    // public function all(HebergementRepository $hebergementRepository): Response
-    // {
-    //     $hebergements = $hebergementRepository->findAll();
+    /**
+     * Méthode qui retourne la liste des utilisateurs
+     * @Route("/users", name="app_user_index")
+     * @param UserRepository $userRepository
+     * @return Response
+     */
+    #[Route('/profile/edit/{id}', name: 'app_client_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, UserRepository $userRepo, EntityManagerInterface $entityManager, int $id): Response
+    {
+        // si l'id n'est pas celui de l'utilisateur connecté et si l'utilisateur n'est pas un admin        
+        $user = $userRepo->find($id);
+        if (!$user || ($user->getId() !== $this->getUser()->getId() && !$this->isGranted('ROLE_ADMIN'))) {
+            return $this->redirectToRoute('app_home');
+        }
 
-    //     return $this->render('hebergements/index.html.twig', [
-    //         'hebergements' => $hebergements
-    //     ]);
-    // }
+        $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
 }

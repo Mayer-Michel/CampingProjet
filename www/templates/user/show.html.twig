@@ -1,48 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}User
+{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+	<h1>{{user.username}}</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Password</th>
-                <th>Username</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>{{ user.password }}</td>
-                <td>{{ user.username }}</td>
-            </tr>
-        </tbody>
-    </table>
+	<div class="card" style="width: 18rem;">
+		<img src="{{asset('images/user.png')}}" class="card-img-top" alt="photo profil">
+		<div class="card-body">
+			<h5 class="card-title">{{user.username}}</h5>
+			{{user.roles|badge_user}}
 
-<div class="action-buttons">
-			<div>
-				{# suppression #}
-				{% include "user/_delete_form.html.twig" with {'button_class': 'btn btn-delete'} %}
-			</div>
-			<div>
-				<a href="{{ path('app_user_edit' , {'id': user.id}) }}" class="btn btn-edit">Editer</a>
+			<p class="card-text">{{user.email}}</p>
+		</div>
+	</div>
 
 
-			</div>
-			<div>
-				<a href="{{path('app_user_index')}}" class="btn btn-back">
+	<div class="action-buttons">
+		<div>
+			{# suppression #}
+			{% include "user/_delete_form.html.twig" with {'button_class': 'btn btn-delete'} %}
+		</div>
+		<div>
+			<a href="{{ path('app_client_edit', {'id': user.id}) }}" class="btn btn-edit">Editer</a>
 
-					<i class="fas fa-arrow-left"></i>Retour à la liste</a>
-
-			</div>
+		</div>
+		<div>
+			<a href="{{path('app_user_index')}}" class="btn btn-back">
+				<i class="fas fa-arrow-left"></i>Retour à la liste</a>
 
 		</div>
 
-	{% endblock %}
+	</div>
+
+{% endblock %}

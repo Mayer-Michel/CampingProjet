@@ -1,23 +1,18 @@
-{% include "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Edition de user
-{% endblock %}
+{% block title %}Edit User{% endblock %}
 
 {% block body %}
-	<div class="game-form-container">
-		<h1>Modifier le user</h1>
-		<h2>user</h2>
+    <h1>Edit User</h1>
 
-		{% include "user/_form.html.twig" with {'button_label': 'Modifier'} %}
+    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
 
-		<div class="action-buttons">
-			<a href="{{ path('app_user_index') }}" class="btn btn-back">
-				<i class="fas fa-arrow-left"></i>
-				Retour à la liste
-			</a>
-			{% include "user/_delete_form.html.twig" %}
-		</div>
-	</div>
-
+<div class="action-buttons">
+	<a href="{{ path('app_user_index') }}" class="btn btn-back">
+		<i class="fas fa-arrow-left"></i>
+		Retour à la liste
+	</a>
+	{% include "user/_delete_form.html.twig" %}
+</div>
 
 {% endblock %}
