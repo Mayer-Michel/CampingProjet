@@ -22,10 +22,10 @@ Dans le fichier \`docker-compose.yml\`, redéfinissez les valeurs de la base de 
 services:
   mariadb:
     environment:
-      - MYSQL_ROOT_PASSWORD=superAdmin # mot de passe root
-      - MYSQL_DATABASE=tp_camping # nom de la base de données
-      - MYSQL_USER=admin # nom de l'utilisateur
-      - MYSQL_PASSWORD=Egy@batman # mot de passe de l'utilisateur
+      - MYSQL_ROOT_PASSWORD=mot_de_passe_root
+      - MYSQL_DATABASE=nom_bdd
+      - MYSQL_USER=nom_user
+      - MYSQL_PASSWORD=mdp_user
 ```
 
 ## 🔩 Configuration du fichier .htaccess
